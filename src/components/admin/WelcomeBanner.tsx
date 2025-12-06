@@ -124,7 +124,7 @@ export default function WelcomeBanner() {
             <div className="text-white/60 text-xs">وضعیت سایت</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-white mb-1">۱۳۸۵</div>
+            <div className="text-2xl font-bold text-white mb-1">۱۳۷۴</div>
             <div className="text-white/60 text-xs">سال تأسیس</div>
           </div>
         </div>

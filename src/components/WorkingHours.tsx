@@ -24,11 +24,11 @@ export default function WorkingHours() {
   }, [])
 
   const schedule = [
-    { day: 'شنبه', hours: '۸:۰۰ - ۱۷:۰۰', isOpen: true },
-    { day: 'یکشنبه', hours: '۸:۰۰ - ۱۷:۰۰', isOpen: true },
-    { day: 'دوشنبه', hours: '۸:۰۰ - ۱۷:۰۰', isOpen: true },
-    { day: 'سه‌شنبه', hours: '۸:۰۰ - ۱۷:۰۰', isOpen: true },
-    { day: 'چهارشنبه', hours: '۸:۰۰ - ۱۷:۰۰', isOpen: true },
+    { day: 'شنبه', hours: '۸:۰۰ - ۱۲:۰۰ و ۱۴:۰۰ - ۱۸:۰۰', isOpen: true },
+    { day: 'یکشنبه', hours: '۸:۰۰ - ۱۲:۰۰ و ۱۴:۰۰ - ۱۸:۰۰', isOpen: true },
+    { day: 'دوشنبه', hours: '۸:۰۰ - ۱۲:۰۰ و ۱۴:۰۰ - ۱۸:۰۰', isOpen: true },
+    { day: 'سه‌شنبه', hours: '۸:۰۰ - ۱۲:۰۰ و ۱۴:۰۰ - ۱۸:۰۰', isOpen: true },
+    { day: 'چهارشنبه', hours: '۸:۰۰ - ۱۲:۰۰ و ۱۴:۰۰ - ۱۸:۰۰', isOpen: true },
     { day: 'پنجشنبه', hours: '۸:۰۰ - ۱۳:۰۰', isOpen: true },
     { day: 'جمعه', hours: 'تعطیل', isOpen: false },
   ]

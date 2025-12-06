@@ -180,10 +180,10 @@ export default function TeamSection() {
             <span className="text-sm text-gray-300">همکاران ما</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            تیم <span className="gradient-text">متخصص</span> کارگاه
+            نیروهای <span className="gradient-text">کارگاه</span>
           </h2>
           <p className="text-gray-400 leading-relaxed">
-            افتخار ما همکاری با تیمی از متخصصین با تجربه و متعهد است که با عشق و دقت، بهترین محصولات را تولید می‌کنند
+            افتخار ما همکاری با تیمی از متخصصین با تجربه و متعهد است که با عشق و دقت، بهترین خدمات را ارائه می‌دهند
           </p>
         </div>
 
@@ -265,7 +265,7 @@ export default function TeamSection() {
                 <div className="text-gray-400 text-sm">نفر متخصص</div>
               </div>
               <div>
-                <div className="text-3xl font-bold gradient-text mb-1">+۱۵</div>
+                <div className="text-3xl font-bold gradient-text mb-1">+۳۰</div>
                 <div className="text-gray-400 text-sm">سال تجربه</div>
               </div>
               <div>

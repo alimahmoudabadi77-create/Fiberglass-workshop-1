@@ -38,7 +38,7 @@ export default function HeroSection() {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-sm text-gray-300">با افتخار از سال ۱۳۸۵</span>
+            <span className="text-sm text-gray-300">با افتخار از سال ۱۳۷۴</span>
           </div>
 
           {/* Main Title */}
@@ -47,19 +47,11 @@ export default function HeroSection() {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            <span className="text-white">کارگاه تخصصی</span>
+            <span className="text-white">کارگاه فایبرگلاس</span>
             <br />
-            <span className="gradient-text">فایبرگلاس</span>
+            <span className="gradient-text">و فلزکاری غارسی</span>
           </h1>
 
-          {/* Subtitle */}
-          <p 
-            className={`text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed transition-all duration-1000 delay-400 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            تولید انواع محصولات فایبرگلاس صنعتی و تزئینی با بالاترین کیفیت و استانداردهای روز دنیا
-          </p>
 
           {/* CTA Buttons */}
           <div 
@@ -94,7 +86,7 @@ export default function HeroSection() {
             }`}
           >
             {[
-              { value: '+۱۵', label: 'سال تجربه' },
+              { value: '+۳۰', label: 'سال تجربه' },
               { value: '+۵۰۰', label: 'پروژه موفق' },
               { value: '+۱۰۰', label: 'مشتری راضی' },
             ].map((stat, index) => (

@@ -73,10 +73,10 @@ export default function AboutSection() {
           <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <span className="text-green-400 font-semibold text-sm tracking-wider">درباره ما</span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
-              بیش از <span className="gradient-text">۱۵ سال</span> تجربه در صنعت فایبرگلاس
+              بیش از <span className="gradient-text">۳۰ سال</span> تجربه در صنعت فایبرگلاس
             </h2>
             <p className="text-gray-400 leading-relaxed mb-6">
-              کارگاه فایبرگلاس ما از سال ۱۳۸۵ فعالیت خود را آغاز کرده و با بهره‌گیری از تجربیات ارزشمند و تجهیزات پیشرفته، توانسته است جایگاه ویژه‌ای در صنعت فایبرگلاس کشور کسب کند.
+              کارگاه فایبرگلاس ما از سال ۱۳۷۴ فعالیت خود را آغاز کرده و با بهره‌گیری از تجربیات ارزشمند و تجهیزات پیشرفته، توانسته است جایگاه ویژه‌ای در صنعت فایبرگلاس کشور کسب کند.
             </p>
             <p className="text-gray-400 leading-relaxed mb-8">
               ما با تعهد به کیفیت و رضایت مشتری، انواع محصولات فایبرگلاس را در ابعاد و طرح‌های مختلف تولید می‌کنیم. از قطعات صنعتی گرفته تا محصولات تزئینی، همه با دقت و ظرافت خاصی ساخته می‌شوند.
@@ -92,7 +92,7 @@ export default function AboutSection() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">سال تأسیس کارگاه</p>
-                  <p className="text-3xl font-bold gradient-text">۱۳۸۵</p>
+                  <p className="text-3xl font-bold gradient-text">۱۳۷۴</p>
                 </div>
               </div>
             </div>

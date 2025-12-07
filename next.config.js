@@ -1,13 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export',  // غیرفعال برای توسعه محلی
+  output: 'export',
   trailingSlash: true,
   images: {
     unoptimized: true,
   },
-  // basePath: '/Fiberglass-workshop',  // غیرفعال برای توسعه محلی
-  // assetPrefix: '/Fiberglass-workshop/',  // غیرفعال برای توسعه محلی
-  // اجازه صفحات داینامیک که client-side رندر می‌شوند
+  basePath: '/Fiberglass-workshop',
+  assetPrefix: '/Fiberglass-workshop/',
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },

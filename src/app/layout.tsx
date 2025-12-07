@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import VisitorTracker from '@/components/VisitorTracker'
 
 export const metadata: Metadata = {
   title: 'کارگاه فایبرگلاس | تولید محصولات فایبرگلاس با کیفیت',
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className="font-vazir antialiased">
+        <VisitorTracker />
         {children}
       </body>
     </html>

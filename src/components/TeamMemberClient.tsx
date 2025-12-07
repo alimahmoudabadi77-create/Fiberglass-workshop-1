@@ -275,15 +275,29 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
           <div className="mt-12 text-center">
             <div className="glass rounded-3xl p-8 inline-block">
               <p className="text-gray-400 mb-4">برای همکاری یا سوال با ما تماس بگیرید</p>
-              <Link
-                href="/#contact"
-                className={`inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r ${gradient} text-white font-semibold shadow-lg ${colorClasses.shadow} hover:scale-105 transition-transform`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                تماس با ما
-              </Link>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                {/* Direct Call Button - Only shows if phone exists */}
+                {member.phone && (
+                  <a
+                    href={`tel:${member.phone}`}
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow-lg shadow-green-500/30 hover:scale-105 transition-transform"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    تماس مستقیم
+                  </a>
+                )}
+                <Link
+                  href="/#contact"
+                  className={`inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r ${gradient} text-white font-semibold shadow-lg ${colorClasses.shadow} hover:scale-105 transition-transform`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  تماس با ما
+                </Link>
+              </div>
             </div>
           </div>
         </div>

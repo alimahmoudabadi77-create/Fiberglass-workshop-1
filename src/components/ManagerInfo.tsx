@@ -1,10 +1,30 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { getManagerInfo, ManagerInfo as ManagerInfoType, formatPhoneNumber } from '@/lib/manager'
 
 export default function ManagerInfo() {
   const [isVisible, setIsVisible] = useState(false)
+  const [manager, setManager] = useState<ManagerInfoType | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    // Load manager info
+    setManager(getManagerInfo())
+
+    // Listen for updates
+    const handleUpdate = () => {
+      setManager(getManagerInfo())
+    }
+
+    window.addEventListener('managerInfoUpdated', handleUpdate)
+    window.addEventListener('storage', handleUpdate)
+
+    return () => {
+      window.removeEventListener('managerInfoUpdated', handleUpdate)
+      window.removeEventListener('storage', handleUpdate)
+    }
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,6 +42,11 @@ export default function ManagerInfo() {
 
     return () => observer.disconnect()
   }, [])
+
+  if (!manager) return null
+
+  const phoneFormatted = formatPhoneNumber(manager.phone)
+  const phoneLink = `tel:${manager.phone}`
 
   return (
     <section ref={sectionRef} className="py-24 relative">
@@ -59,8 +84,8 @@ export default function ManagerInfo() {
 
               {/* Name & Title */}
               <div className="text-center sm:text-right">
-                <h3 className="text-2xl font-bold text-white mb-1">محمد علی غارسی</h3>
-                <p className="text-green-400 font-medium">مدیر کارگاه فایبرگلاس</p>
+                <h3 className="text-2xl font-bold text-white mb-1">{manager.firstName} {manager.lastName}</h3>
+                <p className="text-green-400 font-medium">{manager.title}</p>
               </div>
             </div>
 
@@ -78,7 +103,7 @@ export default function ManagerInfo() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm mb-1">نام</p>
-                  <p className="text-white font-semibold">محمد علی</p>
+                  <p className="text-white font-semibold">{manager.firstName}</p>
                 </div>
               </div>
 
@@ -91,13 +116,13 @@ export default function ManagerInfo() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm mb-1">نام خانوادگی</p>
-                  <p className="text-white font-semibold">غارسی</p>
+                  <p className="text-white font-semibold">{manager.lastName}</p>
                 </div>
               </div>
 
               {/* Phone */}
               <a 
-                href="tel:09173147318" 
+                href={phoneLink}
                 className="flex items-center gap-4 p-4 rounded-xl bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 transition-all duration-300 group"
               >
                 <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -107,7 +132,7 @@ export default function ManagerInfo() {
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-400 text-sm mb-1">شماره تماس</p>
-                  <p className="text-green-400 font-bold text-lg tracking-wide" dir="ltr">0917 314 7318</p>
+                  <p className="text-green-400 font-bold text-lg tracking-wide" dir="ltr">{phoneFormatted}</p>
                 </div>
                 <div className="text-green-400 group-hover:translate-x-1 transition-transform duration-300">
                   <svg className="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +145,7 @@ export default function ManagerInfo() {
             {/* Call to Action */}
             <div className="mt-8 text-center">
               <a
-                href="tel:09173147318"
+                href={phoneLink}
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 transition-all duration-300"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,4 +160,3 @@ export default function ManagerInfo() {
     </section>
   )
 }
-

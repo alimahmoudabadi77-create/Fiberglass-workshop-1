@@ -5,6 +5,7 @@ import { getSettings, SiteSettings } from '@/lib/settings'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import HeroSection from '@/components/HeroSection'
+import ServicesPreview from '@/components/ServicesPreview'
 import AboutSection from '@/components/AboutSection'
 import FiberglassInfo from '@/components/FiberglassInfo'
 import Gallery from '@/components/Gallery'
@@ -14,7 +15,7 @@ import ManagerInfo from '@/components/ManagerInfo'
 import ContactSection from '@/components/ContactSection'
 import MaintenanceMode from '@/components/MaintenanceMode'
 import DateTimeClock from '@/components/DateTimeClock'
-import ChatButton from '@/components/ChatButton'
+// ChatButton removed - using navbar message button instead
 
 export default function Home() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -72,13 +73,13 @@ export default function Home() {
         <HeroSection />
         <AboutSection />
         <FiberglassInfo />
+        <ServicesPreview />
         <Gallery />
         <TeamSection />
         <WorkingHours />
         <ManagerInfo />
         <ContactSection />
       </main>
-      <ChatButton />
       <Footer />
     </>
   )

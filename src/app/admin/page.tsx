@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getSettings, saveSettings, SiteSettings } from '@/lib/settings'
+import { getSettings, SiteSettings } from '@/lib/settings'
 import Link from 'next/link'
 import GalleryManager from '@/components/admin/GalleryManager'
 import TeamManager from '@/components/admin/TeamManager'
@@ -10,22 +10,21 @@ import ContactManager from '@/components/admin/ContactManager'
 import MessagesManager from '@/components/admin/MessagesManager'
 import ChatManager from '@/components/admin/ChatManager'
 import AboutManager from '@/components/admin/AboutManager'
+import ManagerManager from '@/components/admin/ManagerManager'
 import Dashboard from '@/components/admin/Dashboard'
 import { getUnreadMessagesCount } from '@/lib/contact'
 import { getTotalUnreadChats } from '@/lib/chat'
 
 export default function AdminPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
-  const [lockMessage, setLockMessage] = useState('')
   const [showSaveSuccess, setShowSaveSuccess] = useState(false)
-  const [activeSection, setActiveSection] = useState<'settings' | 'gallery' | 'team' | 'contact' | 'messages' | 'chat' | 'dashboard' | 'about'>('settings')
+  const [activeSection, setActiveSection] = useState<'gallery' | 'team' | 'contact' | 'messages' | 'chat' | 'dashboard' | 'about' | 'manager'>('about')
   const [unreadMessages, setUnreadMessages] = useState(0)
   const [unreadChats, setUnreadChats] = useState(0)
 
   useEffect(() => {
     const currentSettings = getSettings()
     setSettings(currentSettings)
-    setLockMessage(currentSettings.lockMessage)
     
     // Update unread messages count
     const updateUnread = () => {
@@ -47,36 +46,6 @@ export default function AdminPage() {
       clearInterval(interval)
     }
   }, [])
-
-  const handleToggleLock = () => {
-    if (!settings) return
-    
-    const newSettings: SiteSettings = {
-      ...settings,
-      isLocked: !settings.isLocked,
-      lastUpdated: new Date().toISOString(),
-    }
-    saveSettings(newSettings)
-    setSettings(newSettings)
-    
-    // Force update across tabs
-    window.dispatchEvent(new Event('storage'))
-    
-    showSuccessMessage()
-  }
-
-  const handleSaveMessage = () => {
-    if (!settings) return
-    
-    const newSettings: SiteSettings = {
-      ...settings,
-      lockMessage: lockMessage,
-      lastUpdated: new Date().toISOString(),
-    }
-    saveSettings(newSettings)
-    setSettings(newSettings)
-    showSuccessMessage()
-  }
 
   const showSuccessMessage = () => {
     setShowSaveSuccess(true)
@@ -109,7 +78,7 @@ export default function AdminPage() {
         {/* Sidebar */}
         <aside className="w-72 bg-slate-900/50 backdrop-blur-xl border-l border-slate-800 p-6 flex flex-col">
           {/* Logo */}
-          <div className="mb-10">
+          <div className="mb-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,23 +97,25 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* Designer Access Button */}
+          <Link
+            href="/admin/designer"
+            className="flex items-center gap-3 px-4 py-3 mb-6 rounded-xl text-sm font-medium bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 border border-purple-500/30 hover:border-purple-500/50 hover:from-purple-500/20 hover:to-pink-500/20 transition-all duration-200"
+          >
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+              <span className="text-white text-sm font-bold">ع</span>
+            </div>
+            <div className="flex-1">
+              <span className="block">ورود علی محمودآبادی</span>
+              <span className="text-purple-400/60 text-xs">پنل طراح</span>
+            </div>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+
           {/* Navigation */}
           <nav className="flex-1 space-y-2">
-            <button
-              onClick={() => setActiveSection('settings')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                activeSection === 'settings'
-                  ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              تنظیمات
-            </button>
-
             <button
               onClick={() => setActiveSection('about')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
@@ -157,6 +128,20 @@ export default function AdminPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               درباره ما
+            </button>
+
+            <button
+              onClick={() => setActiveSection('manager')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                activeSection === 'manager'
+                  ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              مدیر کارگاه
             </button>
 
             <button
@@ -274,110 +259,13 @@ export default function AdminPage() {
 
         {/* Main Content */}
         <main className="flex-1 p-8 overflow-auto">
-          {activeSection === 'settings' ? (
-            <>
-              {/* Welcome Banner - فقط در بخش تنظیمات */}
-              <WelcomeBanner />
-            <div className="max-w-3xl">
-              {/* Header */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">تنظیمات</h2>
-                <p className="text-slate-400 text-sm">مدیریت تنظیمات وبسایت</p>
-              </div>
-
-              {/* Site Lock Card */}
-              <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-800 p-6 mb-6">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                      settings.isLocked 
-                        ? 'bg-red-500/20 text-red-400' 
-                        : 'bg-emerald-500/20 text-emerald-400'
-                    }`}>
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        {settings.isLocked ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        ) : (
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                        )}
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">قفل وبسایت</h3>
-                      <p className="text-slate-500 text-sm">غیرفعال کردن دسترسی کاربران به وبسایت</p>
-                    </div>
-                  </div>
-
-                  {/* Toggle Switch */}
-                  <button
-                    onClick={handleToggleLock}
-                    className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
-                      settings.isLocked ? 'bg-red-500' : 'bg-slate-700'
-                    }`}
-                  >
-                    <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-lg transition-all duration-300 ${
-                      settings.isLocked ? 'right-1' : 'right-8'
-                    }`} />
-                  </button>
-                </div>
-
-                {/* Status */}
-                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium ${
-                  settings.isLocked 
-                    ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
-                    : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                }`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${settings.isLocked ? 'bg-red-400' : 'bg-emerald-400'} animate-pulse`} />
-                  {settings.isLocked ? 'وبسایت قفل است - کاربران نمی‌توانند وارد شوند' : 'وبسایت فعال است'}
-                </div>
-              </div>
-
-              {/* Lock Message Card */}
-              <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-800 p-6">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">پیام قفل</h3>
-                    <p className="text-slate-500 text-sm">پیامی که هنگام قفل بودن نمایش داده می‌شود</p>
-                  </div>
-                </div>
-
-                <textarea
-                  value={lockMessage}
-                  onChange={(e) => setLockMessage(e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all duration-200 resize-none mb-4"
-                  placeholder="پیام خود را وارد کنید..."
-                />
-
-                <div className="flex items-center justify-between">
-                  <div className="text-slate-500 text-xs">
-                    این پیام به کاربران نمایش داده می‌شود
-                  </div>
-                  <button
-                    onClick={handleSaveMessage}
-                    className="px-5 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-all duration-200 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    ذخیره
-                  </button>
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="mt-6 text-slate-600 text-xs text-center">
-                آخرین بروزرسانی: {new Date(settings.lastUpdated).toLocaleDateString('fa-IR')} ساعت {new Date(settings.lastUpdated).toLocaleTimeString('fa-IR')}
-              </div>
-            </div>
-            </>
-          ) : activeSection === 'about' ? (
+          {/* Welcome Banner - Always visible */}
+          <WelcomeBanner />
+          
+          {activeSection === 'about' ? (
             <AboutManager />
+          ) : activeSection === 'manager' ? (
+            <ManagerManager />
           ) : activeSection === 'gallery' ? (
             <GalleryManager />
           ) : activeSection === 'team' ? (

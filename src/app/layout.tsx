@@ -1,10 +1,18 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import VisitorTracker from '@/components/VisitorTracker'
+import { LanguageProvider } from '@/lib/LanguageContext'
 
 export const metadata: Metadata = {
-  title: 'کارگاه فایبرگلاس | تولید محصولات فایبرگلاس با کیفیت',
-  description: 'کارگاه تخصصی تولید و ساخت محصولات فایبرگلاس با بیش از سال‌ها تجربه. ارائه خدمات حرفه‌ای در زمینه ساخت قطعات فایبرگلاس صنعتی و تزئینی.',
+  title: 'Fiberglass Workshop | High Quality Fiberglass Products',
+  description: 'Professional fiberglass manufacturing workshop with years of experience. Providing professional services in industrial and decorative fiberglass parts.',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 }
 
 export default function RootLayout({
@@ -13,10 +21,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fa" dir="rtl">
-      <body className="font-vazir antialiased">
-        <VisitorTracker />
-        {children}
+    <html lang="en" dir="ltr">
+      <body className="font-sans antialiased overflow-x-hidden">
+        <LanguageProvider>
+          <VisitorTracker />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   )

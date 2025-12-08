@@ -2,10 +2,13 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useLanguage } from '@/lib/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,13 +19,13 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { href: '/', label: 'صفحه اصلی' },
-    { href: '#about', label: 'درباره ما' },
-    { href: '#gallery', label: 'گالری' },
-    { href: '#team', label: 'تیم ما' },
-    { href: '#services', label: 'خدمات' },
-    { href: '#contact', label: 'تماس با ما' },
-    { href: '/admin', label: 'مدیریت' },
+    { href: '/', label: t.nav.home },
+    { href: '#about', label: t.nav.about },
+    { href: '#gallery', label: t.nav.gallery },
+    { href: '#team', label: t.nav.team },
+    { href: '#services', label: t.nav.services },
+    { href: '#contact', label: t.nav.contact },
+    { href: '/admin', label: t.nav.admin },
   ]
 
   return (
@@ -53,8 +56,8 @@ export default function Navbar() {
               </svg>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold gradient-text">کارگاه فایبرگلاس</h1>
-              <p className="text-xs text-gray-400">کیفیت، دقت، اعتماد</p>
+              <h1 className="text-xl font-bold gradient-text">{t.nav.workshopName}</h1>
+              <p className="text-xs text-gray-400">{t.nav.slogan}</p>
             </div>
           </Link>
 
@@ -77,45 +80,77 @@ export default function Navbar() {
             {/* Chat Button */}
             <Link
               href="/chat"
-              className="mr-2 flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium hover:from-blue-600 hover:to-cyan-600 shadow-lg shadow-blue-500/25 transition-all duration-300"
+              className="ml-2 flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium hover:from-blue-600 hover:to-cyan-600 shadow-lg shadow-blue-500/25 transition-all duration-300"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
-              پیام به ما
+              {t.nav.messageUs}
             </Link>
+
+            {/* Language Switcher */}
+            <div className="ml-2">
+              <LanguageSwitcher />
+            </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden w-10 h-10 rounded-lg glass flex items-center justify-center"
-          >
-            <svg
-              className={`w-6 h-6 text-white transition-transform duration-300 ${
-                isMobileMenuOpen ? 'rotate-90' : ''
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          {/* Mobile Action Buttons & Menu Button */}
+          <div className="flex md:hidden items-center gap-2">
+            {/* Language Switcher - Mobile */}
+            <LanguageSwitcher />
+
+            {/* Chat Button - Mobile (Always Visible) */}
+            <Link
+              href="/chat"
+              className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25"
             >
-              {isMobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </Link>
+            
+            {/* Admin Button - Mobile (Always Visible) */}
+            <Link
+              href="/admin"
+              className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/25"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </Link>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="w-9 h-9 rounded-lg glass flex items-center justify-center"
+            >
+              <svg
+                className={`w-5 h-5 text-white transition-transform duration-300 ${
+                  isMobileMenuOpen ? 'rotate-90' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {isMobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -149,7 +184,7 @@ export default function Navbar() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
-              پیام به ما
+              {t.nav.messageUs}
             </Link>
           </div>
         </div>
@@ -157,4 +192,3 @@ export default function Navbar() {
     </nav>
   )
 }
-

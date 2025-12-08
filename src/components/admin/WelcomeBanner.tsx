@@ -1,33 +1,50 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { getSettings } from '@/lib/settings'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function WelcomeBanner() {
   const [isVisible, setIsVisible] = useState(false)
   const [currentTime, setCurrentTime] = useState('')
   const [greeting, setGreeting] = useState('')
+  const [isSiteActive, setIsSiteActive] = useState(true)
+  const { t, language } = useLanguage()
 
   useEffect(() => {
     setIsVisible(true)
+    
+    // دریافت وضعیت سایت
+    const settings = getSettings()
+    setIsSiteActive(!settings.isLocked)
     
     // تعیین سلام بر اساس ساعت
     const updateGreeting = () => {
       const hour = new Date().getHours()
       if (hour >= 5 && hour < 12) {
-        setGreeting('صبح بخیر')
+        setGreeting(t.admin.welcome.goodMorning)
       } else if (hour >= 12 && hour < 17) {
-        setGreeting('ظهر بخیر')
+        setGreeting(t.admin.welcome.goodAfternoon)
       } else if (hour >= 17 && hour < 21) {
-        setGreeting('عصر بخیر')
+        setGreeting(t.admin.welcome.goodEvening)
       } else {
-        setGreeting('شب بخیر')
+        setGreeting(t.admin.welcome.goodNight)
       }
     }
 
     // به‌روزرسانی ساعت
     const updateTime = () => {
       const now = new Date()
-      setCurrentTime(now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }))
+      const localeMap: Record<string, string> = {
+        'en': 'en-US',
+        'de': 'de-DE',
+        'fa': 'fa-IR',
+        'ru': 'ru-RU',
+        'fr': 'fr-FR',
+        'ar': 'ar-SA',
+      }
+      const locale = localeMap[language] || 'en-US'
+      setCurrentTime(now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }))
     }
 
     updateGreeting()
@@ -35,11 +52,20 @@ export default function WelcomeBanner() {
 
     const interval = setInterval(updateTime, 1000)
     return () => clearInterval(interval)
-  }, [])
+  }, [t, language])
 
-  // تاریخ شمسی
-  const getPersianDate = () => {
-    return new Date().toLocaleDateString('fa-IR', {
+  // تاریخ بر اساس زبان
+  const getFormattedDate = () => {
+    const localeMap: Record<string, string> = {
+      'en': 'en-US',
+      'de': 'de-DE',
+      'fa': 'fa-IR',
+      'ru': 'ru-RU',
+      'fr': 'fr-FR',
+      'ar': 'ar-SA',
+    }
+    const locale = localeMap[language] || 'en-US'
+    return new Date().toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -88,10 +114,10 @@ export default function WelcomeBanner() {
                 <span className="text-xl">👋</span>
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">
-                آقای محمد علی غارسی
+                {t.admin.managerName}
               </h1>
               <p className="text-white/70 text-sm">
-                به پنل مدیریت کارگاه فایبرگلاس خوش آمدید
+                {t.admin.welcome.welcomeMessage}
               </p>
             </div>
           </div>
@@ -108,28 +134,22 @@ export default function WelcomeBanner() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>{getPersianDate()}</span>
+              <span>{getFormattedDate()}</span>
             </div>
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="relative z-10 grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/20">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-white mb-1">۴</div>
-            <div className="text-white/60 text-xs">اعضای تیم</div>
+        {/* Site Status */}
+        <div className="relative z-10 mt-8 pt-6 border-t border-white/20">
+          <div className="flex items-center justify-center gap-3">
+            <div className={`w-3 h-3 rounded-full ${isSiteActive ? 'bg-emerald-400 shadow-lg shadow-emerald-400/50' : 'bg-red-500 shadow-lg shadow-red-500/50'} animate-pulse`} />
+            <div className={`text-2xl font-bold ${isSiteActive ? 'text-emerald-400' : 'text-red-500'}`}>
+              {isSiteActive ? t.admin.welcome.active : t.admin.welcome.inactive}
+            </div>
           </div>
-          <div className="text-center border-x border-white/20">
-            <div className="text-2xl font-bold text-white mb-1">فعال</div>
-            <div className="text-white/60 text-xs">وضعیت سایت</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-white mb-1">۱۳۷۴</div>
-            <div className="text-white/60 text-xs">سال تأسیس</div>
-          </div>
+          <div className="text-white/60 text-xs text-center mt-2">{t.admin.welcome.siteStatus}</div>
         </div>
       </div>
     </div>
   )
 }
-

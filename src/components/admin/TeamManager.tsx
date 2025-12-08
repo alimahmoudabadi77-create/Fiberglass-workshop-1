@@ -10,6 +10,7 @@ import {
   TEAM_COLORS,
   getAutoColor
 } from '@/lib/team'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function TeamManager() {
   const [members, setMembers] = useState<TeamMember[]>([])
@@ -18,6 +19,7 @@ export default function TeamManager() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null)
   const [showSuccess, setShowSuccess] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'basic' | 'details'>('basic')
+  const { t } = useLanguage()
 
   // Form state
   const [formData, setFormData] = useState({
@@ -70,7 +72,7 @@ export default function TeamManager() {
     loadMembers()
     setShowAddModal(false)
     resetForm()
-    showSuccessMessage('عضو جدید با موفقیت اضافه شد')
+    showSuccessMessage(t.admin.team.memberAdded)
   }
 
   const handleEdit = () => {
@@ -80,14 +82,14 @@ export default function TeamManager() {
     loadMembers()
     setEditingMember(null)
     resetForm()
-    showSuccessMessage('اطلاعات با موفقیت ویرایش شد')
+    showSuccessMessage(t.admin.team.memberEdited)
   }
 
   const handleDelete = (id: string) => {
     deleteTeamMember(id)
     loadMembers()
     setShowDeleteConfirm(null)
-    showSuccessMessage('عضو با موفقیت حذف شد')
+    showSuccessMessage(t.admin.team.memberDeleted)
   }
 
   const openEditModal = (member: TeamMember) => {
@@ -138,13 +140,13 @@ export default function TeamManager() {
 
     // بررسی سایز فایل (حداکثر 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert('حجم تصویر نباید بیشتر از ۲ مگابایت باشد')
+      alert(t.admin.team.maxSize)
       return
     }
 
     // بررسی نوع فایل
     if (!file.type.startsWith('image/')) {
-      alert('لطفاً فقط فایل تصویری انتخاب کنید')
+      alert(t.admin.team.selectImage)
       return
     }
 
@@ -194,8 +196,8 @@ export default function TeamManager() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">مدیریت تیم</h2>
-          <p className="text-slate-400 text-sm">افزودن، ویرایش و حذف اعضای تیم کارگاه</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t.admin.team.title}</h2>
+          <p className="text-slate-400 text-sm">{t.admin.team.subtitle}</p>
         </div>
         <button
           onClick={() => {
@@ -207,7 +209,7 @@ export default function TeamManager() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          افزودن عضو جدید
+          {t.admin.team.addMember}
         </button>
       </div>
 
@@ -219,8 +221,8 @@ export default function TeamManager() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">تیمی وجود ندارد</h3>
-          <p className="text-slate-500 text-sm mb-6">اولین عضو تیم را اضافه کنید</p>
+          <h3 className="text-lg font-semibold text-white mb-2">{t.admin.team.noTeam}</h3>
+          <p className="text-slate-500 text-sm mb-6">{t.admin.team.addFirstMember}</p>
           <button
             onClick={() => {
               resetForm()
@@ -231,13 +233,13 @@ export default function TeamManager() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            افزودن عضو
+            {t.admin.team.addMember}
           </button>
         </div>
       ) : (
         <>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-medium">{members.length} عضو</h3>
+            <h3 className="text-white font-medium">{members.length} {t.admin.team.members}</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {members.map((member) => {
@@ -278,12 +280,12 @@ export default function TeamManager() {
                   <div className="flex flex-wrap gap-2 mb-4">
                     {member.experience && (
                       <span className="text-xs px-2 py-1 rounded-md bg-slate-800 text-slate-400">
-                        {member.experience} سال تجربه
+                        {member.experience} {t.admin.team.yearsExperience}
                       </span>
                     )}
                     {member.skills && member.skills.length > 0 && (
                       <span className="text-xs px-2 py-1 rounded-md bg-slate-800 text-slate-400">
-                        {member.skills.length} مهارت
+                        {member.skills.length} {t.admin.team.skills}
                       </span>
                     )}
                   </div>
@@ -297,7 +299,7 @@ export default function TeamManager() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
-                      ویرایش
+                      {t.admin.gallery.edit}
                     </button>
                     <button
                       onClick={() => setShowDeleteConfirm(member.id)}
@@ -322,7 +324,7 @@ export default function TeamManager() {
             {/* Modal Header */}
             <div className="flex items-center justify-between p-5 border-b border-slate-800">
               <h3 className="text-lg font-semibold text-white">
-                {editingMember ? 'ویرایش عضو' : 'افزودن عضو جدید'}
+                {editingMember ? t.admin.team.editMember : t.admin.team.addNewMember}
               </h3>
               <button
                 onClick={() => {
@@ -348,7 +350,7 @@ export default function TeamManager() {
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                اطلاعات پایه
+                {t.admin.team.basicInfo}
               </button>
               <button
                 onClick={() => setActiveTab('details')}
@@ -358,7 +360,7 @@ export default function TeamManager() {
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                جزئیات و سوابق
+                {t.admin.team.detailsAndHistory}
               </button>
             </div>
 
@@ -368,55 +370,55 @@ export default function TeamManager() {
                 <>
                   {/* Name */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">نام و نام خانوادگی *</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.fullName}</label>
                     <input
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                      placeholder="مثال: علی غارسی"
+                      placeholder={t.admin.team.namePlaceholder}
                     />
                   </div>
 
                   {/* Role */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">سمت / تخصص *</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.position}</label>
                     <input
                       type="text"
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                      placeholder="مثال: جوشکار"
+                      placeholder={t.admin.team.positionPlaceholder}
                     />
                   </div>
 
                   {/* Bio */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">بیوگرافی کوتاه</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.shortBio}</label>
                     <input
                       type="text"
                       value={formData.bio}
                       onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                      placeholder="مثال: متخصص جوشکاری با ۱۰ سال تجربه"
+                      placeholder={t.admin.team.bioPlaceholder}
                     />
                   </div>
 
                   {/* Experience */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">سال‌های تجربه</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.experienceYears}</label>
                     <input
                       type="text"
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                      placeholder="مثال: ۱۰"
+                      placeholder={t.admin.team.experiencePlaceholder}
                     />
                   </div>
 
                   {/* Image Upload */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">تصویر پروفایل</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.profileImage}</label>
                     <div className="flex items-start gap-4">
                       {/* Image Preview */}
                       <div className="relative">
@@ -424,12 +426,12 @@ export default function TeamManager() {
                           <div className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-slate-700">
                             <img 
                               src={formData.image} 
-                              alt="پیش‌نمایش" 
+                              alt="Preview" 
                               className="w-full h-full object-cover"
                             />
                             <button
                               onClick={removeImage}
-                              className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center text-white transition-colors"
+                              className="absolute top-1 end-1 w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center text-white transition-colors"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -451,8 +453,8 @@ export default function TeamManager() {
                           <svg className="w-6 h-6 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-xs text-slate-400">انتخاب تصویر</span>
-                          <span className="text-xs text-slate-500 mt-1">حداکثر ۲ مگابایت</span>
+                          <span className="text-xs text-slate-400">{t.admin.team.selectImage}</span>
+                          <span className="text-xs text-slate-500 mt-1">{t.admin.team.maxSize}</span>
                           <input
                             type="file"
                             accept="image/*"
@@ -462,26 +464,26 @@ export default function TeamManager() {
                         </label>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-500 mt-2">اگر تصویر آپلود نشود، آیکون رنگی نمایش داده می‌شود</p>
+                    <p className="text-xs text-slate-500 mt-2">{t.admin.team.imageNote}</p>
                   </div>
                 </>
               ) : (
                 <>
                   {/* Description */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">توضیحات کامل</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.fullDescription}</label>
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={4}
                       className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors resize-none"
-                      placeholder="توضیحات کامل درباره سوابق کاری و تخصص..."
+                      placeholder={t.admin.team.descriptionPlaceholder}
                     />
                   </div>
 
                   {/* Skills */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">مهارت‌ها</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.skillsTitle}</label>
                     <div className="flex gap-2 mb-2">
                       <input
                         type="text"
@@ -489,13 +491,13 @@ export default function TeamManager() {
                         onChange={(e) => setNewSkill(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
                         className="flex-1 px-4 py-2 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                        placeholder="مهارت جدید..."
+                        placeholder={t.admin.team.newSkillPlaceholder}
                       />
                       <button
                         onClick={addSkill}
                         className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm transition-colors"
                       >
-                        افزودن
+                        {t.admin.team.add}
                       </button>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -520,7 +522,7 @@ export default function TeamManager() {
 
                   {/* Achievements */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">دستاوردها</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.achievements}</label>
                     <div className="flex gap-2 mb-2">
                       <input
                         type="text"
@@ -528,13 +530,13 @@ export default function TeamManager() {
                         onChange={(e) => setNewAchievement(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAchievement())}
                         className="flex-1 px-4 py-2 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                        placeholder="دستاورد جدید..."
+                        placeholder={t.admin.team.newAchievementPlaceholder}
                       />
                       <button
                         onClick={addAchievement}
                         className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm transition-colors"
                       >
-                        افزودن
+                        {t.admin.team.add}
                       </button>
                     </div>
                     <div className="space-y-2">
@@ -559,13 +561,13 @@ export default function TeamManager() {
 
                   {/* Phone */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-2">شماره تماس (اختیاری)</label>
+                    <label className="block text-slate-400 text-sm mb-2">{t.admin.team.phoneOptional}</label>
                     <input
                       type="text"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                      placeholder="مثال: ۰۹۱۲۱۲۳۴۵۶۷"
+                      placeholder={t.admin.team.phonePlaceholder}
                       dir="ltr"
                     />
                   </div>
@@ -576,7 +578,7 @@ export default function TeamManager() {
             {/* Modal Footer */}
             <div className="flex items-center justify-between p-5 border-t border-slate-800">
               <div className="text-slate-500 text-sm">
-                {activeTab === 'basic' ? 'مرحله ۱ از ۲' : 'مرحله ۲ از ۲'}
+                {activeTab === 'basic' ? t.admin.team.step1of2 : t.admin.team.step2of2}
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -587,21 +589,21 @@ export default function TeamManager() {
                   }}
                   className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors"
                 >
-                  انصراف
+                  {t.admin.gallery.cancel}
                 </button>
                 {activeTab === 'basic' ? (
                   <button
                     onClick={() => setActiveTab('details')}
                     className="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium transition-colors"
                   >
-                    مرحله بعد
+                    {t.admin.team.nextStep}
                   </button>
                 ) : (
                   <button
                     onClick={() => setActiveTab('basic')}
                     className="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium transition-colors"
                   >
-                    مرحله قبل
+                    {t.admin.team.prevStep}
                   </button>
                 )}
                 <button
@@ -609,7 +611,7 @@ export default function TeamManager() {
                   disabled={!formData.name || !formData.role}
                   className="px-5 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 disabled:bg-slate-700 disabled:text-slate-500 text-white text-sm font-medium transition-colors"
                 >
-                  {editingMember ? 'ذخیره تغییرات' : 'افزودن'}
+                  {editingMember ? t.admin.gallery.saveChanges : t.admin.team.add}
                 </button>
               </div>
             </div>
@@ -626,20 +628,20 @@ export default function TeamManager() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">حذف عضو</h3>
-            <p className="text-slate-400 text-sm mb-6">آیا از حذف این عضو اطمینان دارید؟</p>
+            <h3 className="text-lg font-semibold text-white mb-2">{t.admin.team.deleteMember}</h3>
+            <p className="text-slate-400 text-sm mb-6">{t.admin.team.deleteConfirm}</p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(null)}
                 className="flex-1 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors"
               >
-                انصراف
+                {t.admin.gallery.cancel}
               </button>
               <button
                 onClick={() => handleDelete(showDeleteConfirm)}
                 className="flex-1 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
               >
-                حذف
+                {t.admin.gallery.delete}
               </button>
             </div>
           </div>

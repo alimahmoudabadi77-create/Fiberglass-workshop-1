@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { getAboutContent, AboutContent } from '@/lib/about'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function AboutSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [content, setContent] = useState<AboutContent | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
+  const { t } = useLanguage()
 
   useEffect(() => {
     // Load content from localStorage
@@ -73,6 +75,21 @@ export default function AboutSection() {
     }
   }
 
+  const getFeatureTranslation = (iconType: string) => {
+    switch (iconType) {
+      case 'quality':
+        return t.about.features.quality
+      case 'speed':
+        return t.about.features.speed
+      case 'team':
+        return t.about.features.team
+      case 'price':
+        return t.about.features.price
+      default:
+        return { title: '', description: '' }
+    }
+  }
+
   // Show loading or default content while loading
   if (!content) {
     return (
@@ -85,56 +102,59 @@ export default function AboutSection() {
   }
 
   return (
-    <section id="about" ref={sectionRef} className="py-24 relative">
+    <section id="about" ref={sectionRef} className="py-12 sm:py-24 relative overflow-hidden">
       {/* Background Decoration */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-72 h-72 bg-green-500/10 rounded-full blur-3xl" />
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-48 sm:w-72 h-48 sm:h-72 bg-green-500/10 rounded-full blur-3xl" />
       
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Content */}
           <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-            <span className="text-green-400 font-semibold text-sm tracking-wider">{content.sectionTitle}</span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
-              {content.mainTitle} <span className="gradient-text">{content.highlightText}</span> {content.mainTitleEnd}
+            <span className="text-green-400 font-semibold text-xs sm:text-sm tracking-wider">{t.about.sectionTitle}</span>
+            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-2 sm:mt-3 mb-4 sm:mb-6">
+              {t.about.mainTitle} <span className="gradient-text">{t.about.highlightText}</span> {t.about.mainTitleEnd}
             </h2>
-            <p className="text-gray-400 leading-relaxed mb-6">
-              {content.description1}
+            <p className="text-gray-400 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+              {t.about.description1}
             </p>
-            <p className="text-gray-400 leading-relaxed mb-8">
-              {content.description2}
+            <p className="text-gray-400 leading-relaxed mb-6 sm:mb-8 text-sm sm:text-base">
+              {t.about.description2}
             </p>
 
             {/* Establishment Year Card */}
-            <div className="glass rounded-2xl p-6 animated-border">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6 animated-border">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-12 sm:w-16 h-12 sm:h-16 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30 flex-shrink-0">
+                  <svg className="w-6 sm:w-8 h-6 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-gray-400 text-sm">{content.establishmentLabel}</p>
-                  <p className="text-3xl font-bold gradient-text">{content.establishmentYear}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm">{t.about.establishmentLabel}</p>
+                  <p className="text-2xl sm:text-3xl font-bold gradient-text">{t.about.establishmentYear}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Features Grid */}
-          <div className={`grid grid-cols-2 gap-4 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-            {content.features.map((feature, index) => (
-              <div
-                key={feature.id}
-                className="glass rounded-2xl p-6 hover-card group"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400/20 to-green-600/20 flex items-center justify-center mb-4 text-green-400 group-hover:scale-110 transition-transform duration-300">
-                  {getIconForType(feature.iconType)}
+          <div className={`grid grid-cols-2 gap-3 sm:gap-4 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+            {content.features.map((feature, index) => {
+              const featureTranslation = getFeatureTranslation(feature.iconType)
+              return (
+                <div
+                  key={feature.id}
+                  className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6 hover-card group"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-400/20 to-green-600/20 flex items-center justify-center mb-3 sm:mb-4 text-green-400 group-hover:scale-110 transition-transform duration-300">
+                    {getIconForType(feature.iconType)}
+                  </div>
+                  <h3 className="text-sm sm:text-lg font-semibold text-white mb-1 sm:mb-2">{featureTranslation.title}</h3>
+                  <p className="text-gray-400 text-xs sm:text-sm leading-relaxed line-clamp-3">{featureTranslation.description}</p>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

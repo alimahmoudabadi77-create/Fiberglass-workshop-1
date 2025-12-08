@@ -8,6 +8,7 @@ import {
   deleteGalleryItem,
   GalleryItem 
 } from '@/lib/gallery'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function GalleryManager() {
   const [items, setItems] = useState<GalleryItem[]>([])
@@ -16,6 +17,7 @@ export default function GalleryManager() {
   const [showSuccess, setShowSuccess] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { t } = useLanguage()
 
   // Edit form state
   const [editForm, setEditForm] = useState({
@@ -63,7 +65,7 @@ export default function GalleryManager() {
 
     loadItems()
     setIsUploading(false)
-    showSuccessMessage(`${files.length} فایل با موفقیت اضافه شد`)
+    showSuccessMessage(`${files.length} ${t.admin.gallery.filesAdded}`)
     
     // Reset input
     if (fileInputRef.current) {
@@ -89,14 +91,14 @@ export default function GalleryManager() {
     })
     loadItems()
     setEditingItem(null)
-    showSuccessMessage('آیتم با موفقیت ویرایش شد')
+    showSuccessMessage(t.admin.gallery.itemEdited)
   }
 
   const handleDelete = (id: string) => {
     deleteGalleryItem(id)
     loadItems()
     setShowDeleteConfirm(null)
-    showSuccessMessage('آیتم با موفقیت حذف شد')
+    showSuccessMessage(t.admin.gallery.itemDeleted)
   }
 
   const openEditModal = (item: GalleryItem) => {
@@ -128,8 +130,8 @@ export default function GalleryManager() {
 
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2">مدیریت گالری</h2>
-        <p className="text-slate-400 text-sm">افزودن، ویرایش و حذف تصاویر و ویدیوها</p>
+        <h2 className="text-2xl font-bold text-white mb-2">{t.admin.gallery.title}</h2>
+        <p className="text-slate-400 text-sm">{t.admin.gallery.subtitle}</p>
       </div>
 
       {/* Upload Area */}
@@ -155,7 +157,7 @@ export default function GalleryManager() {
           {isUploading ? (
             <>
               <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4" />
-              <p className="text-blue-400 font-medium">در حال آپلود...</p>
+              <p className="text-blue-400 font-medium">{t.admin.gallery.uploading}</p>
             </>
           ) : (
             <>
@@ -164,20 +166,20 @@ export default function GalleryManager() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <p className="text-white font-medium mb-2">برای آپلود کلیک کنید</p>
-              <p className="text-slate-500 text-sm mb-4">یا فایل‌ها را اینجا بکشید و رها کنید</p>
+              <p className="text-white font-medium mb-2">{t.admin.gallery.uploadTitle}</p>
+              <p className="text-slate-500 text-sm mb-4">{t.admin.gallery.uploadSubtitle}</p>
               <div className="flex items-center gap-4 text-xs text-slate-600">
                 <span className="flex items-center gap-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  تصاویر
+                  {t.admin.gallery.images}
                 </span>
                 <span className="flex items-center gap-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  ویدیوها
+                  {t.admin.gallery.videos}
                 </span>
               </div>
             </>
@@ -193,13 +195,13 @@ export default function GalleryManager() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">گالری خالی است</h3>
-          <p className="text-slate-500 text-sm">از بخش بالا عکس یا ویدیو آپلود کنید</p>
+          <h3 className="text-lg font-semibold text-white mb-2">{t.admin.gallery.emptyGallery}</h3>
+          <p className="text-slate-500 text-sm">{t.admin.gallery.uploadHint}</p>
         </div>
       ) : (
         <>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-medium">{items.length} آیتم</h3>
+            <h3 className="text-white font-medium">{items.length} {t.admin.gallery.items}</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {items.map((item) => (
@@ -224,7 +226,7 @@ export default function GalleryManager() {
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-white mr-[-2px]" fill="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-6 h-6 text-white ms-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z" />
                           </svg>
                         </div>
@@ -233,13 +235,13 @@ export default function GalleryManager() {
                   )}
 
                   {/* Type Badge */}
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-2 end-2">
                     <div className={`px-2 py-1 rounded-md text-xs font-medium ${
                       item.type === 'image' 
                         ? 'bg-blue-500/80 text-white' 
                         : 'bg-purple-500/80 text-white'
                     }`}>
-                      {item.type === 'image' ? 'تصویر' : 'ویدیو'}
+                      {item.type === 'image' ? t.admin.gallery.image : t.admin.gallery.video}
                     </div>
                   </div>
                 </div>
@@ -260,7 +262,7 @@ export default function GalleryManager() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
-                      ویرایش
+                      {t.admin.gallery.edit}
                     </button>
                     <button
                       onClick={() => setShowDeleteConfirm(item.id)}
@@ -284,7 +286,7 @@ export default function GalleryManager() {
           <div className="w-full max-w-lg bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-5 border-b border-slate-800">
-              <h3 className="text-lg font-semibold text-white">ویرایش آیتم</h3>
+              <h3 className="text-lg font-semibold text-white">{t.admin.gallery.editItem}</h3>
               <button
                 onClick={() => setEditingItem(null)}
                 className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 transition-colors"
@@ -316,25 +318,25 @@ export default function GalleryManager() {
 
               {/* Title */}
               <div>
-                <label className="block text-slate-400 text-sm mb-2">عنوان</label>
+                <label className="block text-slate-400 text-sm mb-2">{t.admin.gallery.title_field}</label>
                 <input
                   type="text"
                   value={editForm.title}
                   onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors"
-                  placeholder="عنوان تصویر یا ویدیو"
+                  placeholder={t.admin.gallery.titlePlaceholder}
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-slate-400 text-sm mb-2">توضیحات (اختیاری)</label>
+                <label className="block text-slate-400 text-sm mb-2">{t.admin.gallery.description}</label>
                 <textarea
                   value={editForm.description}
                   onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                   rows={3}
                   className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition-colors resize-none"
-                  placeholder="توضیحات مختصر..."
+                  placeholder={t.admin.gallery.descriptionPlaceholder}
                 />
               </div>
             </div>
@@ -345,13 +347,13 @@ export default function GalleryManager() {
                 onClick={() => setEditingItem(null)}
                 className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors"
               >
-                انصراف
+                {t.admin.gallery.cancel}
               </button>
               <button
                 onClick={handleEdit}
                 className="px-5 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-colors"
               >
-                ذخیره تغییرات
+                {t.admin.gallery.saveChanges}
               </button>
             </div>
           </div>
@@ -367,20 +369,20 @@ export default function GalleryManager() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">حذف آیتم</h3>
-            <p className="text-slate-400 text-sm mb-6">آیا از حذف این آیتم اطمینان دارید؟ این عمل قابل بازگشت نیست.</p>
+            <h3 className="text-lg font-semibold text-white mb-2">{t.admin.gallery.deleteItem}</h3>
+            <p className="text-slate-400 text-sm mb-6">{t.admin.gallery.deleteConfirm}</p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(null)}
                 className="flex-1 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors"
               >
-                انصراف
+                {t.admin.gallery.cancel}
               </button>
               <button
                 onClick={() => handleDelete(showDeleteConfirm)}
                 className="flex-1 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
               >
-                حذف
+                {t.admin.gallery.delete}
               </button>
             </div>
           </div>

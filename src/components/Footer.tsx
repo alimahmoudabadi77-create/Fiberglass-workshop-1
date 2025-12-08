@@ -1,20 +1,32 @@
+'use client'
+
 import Link from 'next/link'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function Footer() {
+  const { t } = useLanguage()
+
+  const quickLinks = [
+    { href: '/', label: t.footer.links.home },
+    { href: '#about', label: t.footer.links.about },
+    { href: '#services', label: t.footer.links.services },
+    { href: '#contact', label: t.footer.links.contact },
+  ]
+
   return (
-    <footer className="relative mt-20">
+    <footer className="relative mt-10 sm:mt-20">
       {/* Gradient Border Top */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-500 to-transparent" />
       
-      <div className="glass py-12">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="glass py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10">
             {/* Logo & Description */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+            <div className="space-y-3 sm:space-y-4 text-center sm:text-start">
+              <div className="flex items-center gap-3 justify-center sm:justify-start">
+                <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center flex-shrink-0">
                   <svg
-                    className="w-7 h-7 text-white"
+                    className="w-5 sm:w-7 h-5 sm:h-7 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -28,28 +40,23 @@ export default function Footer() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold gradient-text">کارگاه فایبرگلاس</h3>
+                  <h3 className="text-lg sm:text-xl font-bold gradient-text">{t.nav.workshopName}</h3>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                با سال‌ها تجربه در زمینه تولید محصولات فایبرگلاس، ما متعهد به ارائه بهترین کیفیت و خدمات به مشتریان خود هستیم.
+              <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                {t.footer.description}
               </p>
             </div>
 
             {/* Quick Links */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-white">دسترسی سریع</h4>
-              <div className="space-y-2">
-                {[
-                  { href: '/', label: 'صفحه اصلی' },
-                  { href: '#about', label: 'درباره ما' },
-                  { href: '#services', label: 'خدمات' },
-                  { href: '#contact', label: 'تماس با ما' },
-                ].map((link) => (
+            <div className="space-y-3 sm:space-y-4 text-center sm:text-start">
+              <h4 className="text-base sm:text-lg font-semibold text-white">{t.footer.quickLinks}</h4>
+              <div className="space-y-2 flex flex-wrap justify-center sm:justify-start sm:flex-col gap-2 sm:gap-0">
+                {quickLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block text-gray-400 hover:text-green-400 transition-colors duration-300 text-sm"
+                    className="inline-block sm:block text-gray-400 hover:text-green-400 transition-colors duration-300 text-xs sm:text-sm px-2 sm:px-0"
                   >
                     {link.label}
                   </Link>
@@ -58,20 +65,20 @@ export default function Footer() {
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-white">اطلاعات تماس</h4>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-gray-400 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="space-y-3 sm:space-y-4 text-center sm:text-start sm:col-span-2 md:col-span-1">
+              <h4 className="text-base sm:text-lg font-semibold text-white">{t.footer.contactInfo}</h4>
+              <div className="space-y-2 sm:space-y-3 flex flex-col items-center sm:items-start">
+                <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-xs sm:text-sm">
+                  <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
                   <span>۰۹۱۲-۱۲۳-۴۵۶۷</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-400 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-2 sm:gap-3 text-gray-400 text-xs sm:text-sm">
+                  <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -83,23 +90,25 @@ export default function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="mt-10 pt-6 border-t border-white/10 text-center space-y-3">
-            <p className="text-gray-500 text-sm">
-              © {new Date().getFullYear()} کارگاه فایبرگلاس. تمامی حقوق محفوظ است.
+          <div className="mt-6 sm:mt-10 pt-4 sm:pt-6 border-t border-white/10 text-center space-y-2 sm:space-y-3">
+            <p className="text-gray-500 text-xs sm:text-sm">
+              © {new Date().getFullYear()} {t.footer.copyright}
             </p>
             
             {/* Designer Credit */}
-            <div className="flex items-center justify-center gap-3 text-sm">
-              <span className="text-gray-600">طراح وبسایت:</span>
-              <span className="text-gray-400 font-medium">علی محمودآبادی</span>
+            <div className="flex flex-col xs:flex-row items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm">
+              <div className="flex items-center gap-1.5">
+                <span className="text-gray-600">{t.footer.designer}</span>
+                <span className="text-gray-400 font-medium">{t.footer.designerName}</span>
+              </div>
               <Link
                 href="/designer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400 hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300 text-xs font-medium"
+                className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-400 hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300 text-[10px] sm:text-xs font-medium"
               >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                نمایش پروفایل و رزومه
+                {t.footer.viewProfile}
               </Link>
             </div>
           </div>
@@ -108,4 +117,3 @@ export default function Footer() {
     </footer>
   )
 }
-

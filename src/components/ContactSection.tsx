@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { getContactInfo, ContactInfo, addContactMessage } from '@/lib/contact'
+import { useLanguage } from '@/lib/LanguageContext'
 
 // مقادیر پیش‌فرض
 const DEFAULT_CONTACT: ContactInfo = {
@@ -18,6 +19,7 @@ export default function ContactSection() {
   const [contact, setContact] = useState<ContactInfo>(DEFAULT_CONTACT)
   const [isLoaded, setIsLoaded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const { t } = useLanguage()
   
   // Form state
   const [formData, setFormData] = useState({
@@ -121,7 +123,7 @@ export default function ContactSection() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
         </svg>
       ),
-      title: 'تلفن تماس',
+      title: t.contact.phone,
       value: contact.phone1,
       subValue: contact.phone2,
     },
@@ -131,7 +133,7 @@ export default function ContactSection() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
       ),
-      title: 'ایمیل',
+      title: t.contact.email,
       value: contact.email1,
       subValue: contact.email2,
     },
@@ -142,54 +144,56 @@ export default function ContactSection() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       ),
-      title: 'آدرس',
+      title: t.contact.address,
       value: contact.address,
       subValue: contact.addressDetail,
     },
   ]
 
   return (
-    <section id="contact" ref={sectionRef} className="py-24 relative">
+    <section id="contact" ref={sectionRef} className="py-12 sm:py-24 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-t from-green-500/5 to-transparent" />
-      <div className="absolute right-0 bottom-0 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
+      <div className="absolute end-0 bottom-0 w-48 sm:w-96 h-48 sm:h-96 bg-green-500/10 rounded-full blur-3xl" />
       
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <span className="text-green-400 font-semibold text-sm tracking-wider">ارتباط با ما</span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
-            با ما در <span className="gradient-text">تماس باشید</span>
+        <div className={`text-center max-w-3xl mx-auto mb-8 sm:mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <span className="text-green-400 font-semibold text-xs sm:text-sm tracking-wider">{t.contact.sectionTitle}</span>
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-2 sm:mt-3 mb-4 sm:mb-6">
+            {t.contact.title} <span className="gradient-text">{t.contact.titleHighlight}</span>
           </h2>
-          <p className="text-gray-400 leading-relaxed">
-            برای دریافت مشاوره رایگان، استعلام قیمت یا هرگونه سوال، با ما تماس بگیرید. کارشناسان ما آماده پاسخگویی به شما هستند.
+          <p className="text-gray-400 leading-relaxed text-sm sm:text-base px-2">
+            {t.contact.description}
           </p>
         </div>
 
         {/* Contact Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-16">
           {contactInfo.map((item, index) => (
             <div
               key={index}
-              className={`glass rounded-2xl p-8 text-center hover-card transition-all duration-1000 ${
+              className={`glass rounded-xl sm:rounded-2xl p-5 sm:p-8 text-center hover-card transition-all duration-1000 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center mx-auto mb-6 text-white shadow-lg shadow-green-500/30">
-                {item.icon}
+              <div className="w-12 sm:w-16 h-12 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center mx-auto mb-4 sm:mb-6 text-white shadow-lg shadow-green-500/30">
+                <div className="scale-75 sm:scale-100">
+                  {item.icon}
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
-              <p className="text-green-400 font-medium mb-1">{item.value}</p>
-              <p className="text-gray-400 text-sm">{item.subValue}</p>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3">{item.title}</h3>
+              <p className="text-green-400 font-medium mb-1 text-sm sm:text-base break-all sm:break-normal">{item.value}</p>
+              <p className="text-gray-400 text-xs sm:text-sm break-all sm:break-normal">{item.subValue}</p>
             </div>
           ))}
         </div>
 
         {/* Contact Form */}
         <div className={`max-w-2xl mx-auto transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="glass rounded-3xl p-8 lg:p-10 animated-border">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">فرم تماس سریع</h3>
+          <div className="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 animated-border">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">{t.contact.formTitle}</h3>
             
             {/* Success/Error Messages */}
             {submitStatus === 'success' && (
@@ -198,7 +202,7 @@ export default function ContactSection() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  پیام شما با موفقیت ارسال شد. به زودی با شما تماس خواهیم گرفت.
+                  {t.contact.form.success}
                 </div>
               </div>
             )}
@@ -209,57 +213,57 @@ export default function ContactSection() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  خطا در ارسال پیام. لطفاً دوباره تلاش کنید.
+                  {t.contact.form.error}
                 </div>
               </div>
             )}
             
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid md:grid-cols-2 gap-5">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">نام و نام خانوادگی</label>
+                  <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.name}</label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300"
-                    placeholder="نام خود را وارد کنید"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 text-sm sm:text-base"
+                    placeholder={t.contact.form.namePlaceholder}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">شماره تماس</label>
+                  <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.phone}</label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300"
-                    placeholder="۰۹۱۲۱۲۳۴۵۶۷"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 text-sm sm:text-base"
+                    placeholder={t.contact.form.phonePlaceholder}
                     required
                   />
                 </div>
               </div>
               
               <div>
-                <label className="block text-gray-400 text-sm mb-2">موضوع</label>
+                <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.subject}</label>
                 <input
                   type="text"
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300"
-                  placeholder="موضوع پیام خود را وارد کنید"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 text-sm sm:text-base"
+                  placeholder={t.contact.form.subjectPlaceholder}
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-gray-400 text-sm mb-2">پیام شما</label>
+                <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.message}</label>
                 <textarea
                   rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 resize-none"
-                  placeholder="پیام خود را بنویسید..."
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 resize-none text-sm sm:text-base"
+                  placeholder={t.contact.form.messagePlaceholder}
                   required
                 />
               </div>
@@ -267,17 +271,17 @@ export default function ContactSection() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 sm:py-4 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    در حال ارسال...
+                    <div className="w-4 sm:w-5 h-4 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    {t.contact.form.submitting}
                   </>
                 ) : (
                   <>
-                    ارسال پیام
-                    <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {t.contact.form.submit}
+                    <svg className="w-4 sm:w-5 h-4 sm:h-5 group-hover:-translate-x-1 rtl:group-hover:translate-x-1 rtl:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                   </>

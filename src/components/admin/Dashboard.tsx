@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { getStats, clearAnalytics, VisitorInfo } from '@/lib/analytics'
+import { useLanguage } from '@/lib/LanguageContext'
 
 interface DashboardProps {
   showClearButton?: boolean
@@ -11,6 +12,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
   const [stats, setStats] = useState<ReturnType<typeof getStats> | null>(null)
   const [selectedVisitor, setSelectedVisitor] = useState<VisitorInfo | null>(null)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const { t, language } = useLanguage()
 
   useEffect(() => {
     const loadStats = () => {
@@ -39,20 +41,32 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
   }
 
   const formatDuration = (seconds: number | null): string => {
-    if (seconds === null) return 'در حال بازدید'
-    if (seconds < 60) return `${seconds} ثانیه`
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} دقیقه`
-    return `${Math.floor(seconds / 3600)} ساعت`
+    if (seconds === null) return t.admin.dashboard.visiting
+    if (seconds < 60) return `${seconds} ${t.admin.dashboard.seconds}`
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} ${t.admin.dashboard.minutes}`
+    return `${Math.floor(seconds / 3600)} ${t.admin.dashboard.hours}`
+  }
+
+  const getLocale = (): string => {
+    const localeMap: Record<string, string> = {
+      'en': 'en-US',
+      'de': 'de-DE',
+      'fa': 'fa-IR',
+      'ru': 'ru-RU',
+      'fr': 'fr-FR',
+      'ar': 'ar-SA',
+    }
+    return localeMap[language] || 'en-US'
   }
 
   const formatTime = (isoString: string): string => {
     const date = new Date(isoString)
-    return date.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })
+    return date.toLocaleTimeString(getLocale(), { hour: '2-digit', minute: '2-digit' })
   }
 
   const formatDate = (isoString: string): string => {
     const date = new Date(isoString)
-    return date.toLocaleDateString('fa-IR')
+    return date.toLocaleDateString(getLocale())
   }
 
   if (!stats) {
@@ -68,8 +82,8 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">داشبورد</h2>
-          <p className="text-slate-400 text-sm">آمار بازدید و اطلاعات کاربران</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t.admin.dashboard.title}</h2>
+          <p className="text-slate-400 text-sm">{t.admin.dashboard.subtitle}</p>
         </div>
         {showClearButton && (
           <button
@@ -79,7 +93,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            پاک کردن داده‌ها
+            {t.admin.dashboard.clearData}
           </button>
         )}
       </div>
@@ -95,12 +109,12 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm">امروز</p>
+              <p className="text-slate-400 text-sm">{t.admin.dashboard.today}</p>
               <p className="text-2xl font-bold text-white">{stats.today.visitors}</p>
             </div>
           </div>
           <div className="text-slate-500 text-xs">
-            {stats.today.pageViews} بازدید صفحه
+            {stats.today.pageViews} {t.admin.dashboard.pageViews}
           </div>
         </div>
 
@@ -113,12 +127,12 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm">این هفته</p>
+              <p className="text-slate-400 text-sm">{t.admin.dashboard.thisWeek}</p>
               <p className="text-2xl font-bold text-white">{stats.week.visitors}</p>
             </div>
           </div>
           <div className="text-slate-500 text-xs">
-            {stats.week.pageViews} بازدید صفحه
+            {stats.week.pageViews} {t.admin.dashboard.pageViews}
           </div>
         </div>
 
@@ -131,12 +145,12 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm">این ماه</p>
+              <p className="text-slate-400 text-sm">{t.admin.dashboard.thisMonth}</p>
               <p className="text-2xl font-bold text-white">{stats.month.visitors}</p>
             </div>
           </div>
           <div className="text-slate-500 text-xs">
-            {stats.month.pageViews} بازدید صفحه
+            {stats.month.pageViews} {t.admin.dashboard.pageViews}
           </div>
         </div>
 
@@ -149,12 +163,12 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
               </svg>
             </div>
             <div>
-              <p className="text-slate-400 text-sm">کل بازدیدها</p>
+              <p className="text-slate-400 text-sm">{t.admin.dashboard.totalVisits}</p>
               <p className="text-2xl font-bold text-white">{stats.total.visitors}</p>
             </div>
           </div>
           <div className="text-slate-500 text-xs">
-            {stats.total.pageViews} بازدید صفحه
+            {stats.total.pageViews} {t.admin.dashboard.pageViews}
           </div>
         </div>
       </div>
@@ -163,11 +177,11 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Weekly Chart */}
         <div className="lg:col-span-2 bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-800 p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">نمودار بازدید ۷ روز اخیر</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{t.admin.dashboard.weeklyChart}</h3>
           <div className="flex items-end gap-2 h-40">
             {stats.dailyStats.length === 0 ? (
               <div className="flex-1 flex items-center justify-center text-slate-500 text-sm">
-                هنوز داده‌ای ثبت نشده
+                {t.admin.dashboard.noData}
               </div>
             ) : (
               stats.dailyStats.map((day, index) => {
@@ -183,7 +197,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
                       />
                     </div>
                     <span className="text-xs text-slate-500">
-                      {new Date(day.date).toLocaleDateString('fa-IR', { day: 'numeric' })}
+                      {new Date(day.date).toLocaleDateString(getLocale(), { day: 'numeric' })}
                     </span>
                   </div>
                 )
@@ -194,11 +208,11 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
 
         {/* Device & Browser Stats */}
         <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-800 p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">آمار دستگاه‌ها</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{t.admin.dashboard.deviceStats}</h3>
           <div className="space-y-4">
             {Object.entries(stats.deviceStats).length === 0 ? (
               <div className="text-slate-500 text-sm text-center py-4">
-                هنوز داده‌ای ثبت نشده
+                {t.admin.dashboard.noData}
               </div>
             ) : (
               Object.entries(stats.deviceStats).map(([device, count]) => {
@@ -222,11 +236,11 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
             )}
           </div>
 
-          <h3 className="text-lg font-semibold text-white mt-6 mb-4">مرورگرها</h3>
+          <h3 className="text-lg font-semibold text-white mt-6 mb-4">{t.admin.dashboard.browsers}</h3>
           <div className="space-y-4">
             {Object.entries(stats.browserStats).length === 0 ? (
               <div className="text-slate-500 text-sm text-center py-4">
-                هنوز داده‌ای ثبت نشده
+                {t.admin.dashboard.noData}
               </div>
             ) : (
               Object.entries(stats.browserStats).map(([browser, count]) => {
@@ -254,7 +268,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
 
       {/* Recent Visitors Table */}
       <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-800 p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">بازدیدکنندگان اخیر</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">{t.admin.dashboard.recentVisitors}</h3>
         
         {stats.recentVisitors.length === 0 ? (
           <div className="text-center py-12">
@@ -263,22 +277,22 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
-            <p className="text-slate-400">هنوز بازدیدکننده‌ای ثبت نشده</p>
-            <p className="text-slate-600 text-sm mt-1">با بازدید از سایت، اطلاعات اینجا نمایش داده می‌شود</p>
+            <p className="text-slate-400">{t.admin.dashboard.noVisitors}</p>
+            <p className="text-slate-600 text-sm mt-1">{t.admin.dashboard.visitSiteHint}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-800">
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">IP</th>
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">تاریخ</th>
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">ورود</th>
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">خروج</th>
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">مدت</th>
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">دستگاه</th>
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">مرورگر</th>
-                  <th className="text-right text-slate-400 text-sm font-medium py-3 px-4">جزئیات</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.ip}</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.date}</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.entry}</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.exit}</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.duration}</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.device}</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.browser}</th>
+                  <th className="text-start text-slate-400 text-sm font-medium py-3 px-4">{t.admin.dashboard.details}</th>
                 </tr>
               </thead>
               <tbody>
@@ -295,7 +309,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
                     </td>
                     <td className="py-3 px-4">
                       <span className={`text-sm ${visitor.exitTime ? 'text-red-400' : 'text-amber-400'}`}>
-                        {visitor.exitTime ? formatTime(visitor.exitTime) : 'آنلاین'}
+                        {visitor.exitTime ? formatTime(visitor.exitTime) : t.admin.dashboard.online}
                       </span>
                     </td>
                     <td className="py-3 px-4">
@@ -314,7 +328,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
                         onClick={() => setSelectedVisitor(visitor)}
                         className="px-3 py-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 text-xs transition-colors"
                       >
-                        مشاهده
+                        {t.admin.dashboard.view}
                       </button>
                     </td>
                   </tr>
@@ -330,7 +344,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-white">جزئیات بازدیدکننده</h3>
+              <h3 className="text-lg font-semibold text-white">{t.admin.dashboard.visitorDetails}</h3>
               <button
                 onClick={() => setSelectedVisitor(null)}
                 className="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
@@ -344,65 +358,65 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">آدرس IP</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.ipAddress}</p>
                   <p className="text-white font-mono">{selectedVisitor.ip}</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">موقعیت</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.location}</p>
                   <p className="text-white">
                     {selectedVisitor.city && selectedVisitor.country 
-                      ? `${selectedVisitor.city}، ${selectedVisitor.country}`
-                      : 'نامشخص'}
+                      ? `${selectedVisitor.city}, ${selectedVisitor.country}`
+                      : t.admin.dashboard.unknown}
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">تاریخ ورود</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.entryDate}</p>
                   <p className="text-white">{formatDate(selectedVisitor.entryTime)}</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">ساعت ورود</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.entryTime}</p>
                   <p className="text-green-400">{formatTime(selectedVisitor.entryTime)}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">ساعت خروج</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.exitTime}</p>
                   <p className={selectedVisitor.exitTime ? 'text-red-400' : 'text-amber-400'}>
-                    {selectedVisitor.exitTime ? formatTime(selectedVisitor.exitTime) : 'هنوز آنلاین'}
+                    {selectedVisitor.exitTime ? formatTime(selectedVisitor.exitTime) : t.admin.dashboard.stillOnline}
                   </p>
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">مدت بازدید</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.visitDuration}</p>
                   <p className="text-white">{formatDuration(selectedVisitor.duration)}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">دستگاه</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.device}</p>
                   <p className="text-white">{selectedVisitor.device}</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">مرورگر</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.browser}</p>
                   <p className="text-white">{selectedVisitor.browser}</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-4">
-                  <p className="text-slate-500 text-xs mb-1">سیستم‌عامل</p>
+                  <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.os}</p>
                   <p className="text-white">{selectedVisitor.os}</p>
                 </div>
               </div>
 
               <div className="bg-slate-800/50 rounded-xl p-4">
-                <p className="text-slate-500 text-xs mb-1">منبع ورود</p>
+                <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.entrySource}</p>
                 <p className="text-white text-sm break-all">{selectedVisitor.referrer}</p>
               </div>
 
               <div className="bg-slate-800/50 rounded-xl p-4">
-                <p className="text-slate-500 text-xs mb-2">صفحات بازدید شده ({selectedVisitor.pageViews})</p>
+                <p className="text-slate-500 text-xs mb-2">{t.admin.dashboard.pagesVisited} ({selectedVisitor.pageViews})</p>
                 <div className="flex flex-wrap gap-2">
                   {selectedVisitor.pages.map((page, index) => (
                     <span key={index} className="px-2 py-1 rounded-lg bg-slate-700 text-slate-300 text-xs">
@@ -425,22 +439,22 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-white text-center mb-2">پاک کردن داده‌ها</h3>
+            <h3 className="text-lg font-semibold text-white text-center mb-2">{t.admin.dashboard.clearDataTitle}</h3>
             <p className="text-slate-400 text-sm text-center mb-6">
-              آیا مطمئن هستید؟ تمام آمار بازدید پاک خواهد شد و این عمل قابل بازگشت نیست.
+              {t.admin.dashboard.clearDataConfirm}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowClearConfirm(false)}
                 className="flex-1 px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors"
               >
-                انصراف
+                {t.admin.gallery.cancel}
               </button>
               <button
                 onClick={handleClearData}
                 className="flex-1 px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors"
               >
-                پاک کردن
+                {t.admin.gallery.delete}
               </button>
             </div>
           </div>
@@ -449,4 +463,3 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
     </div>
   )
 }
-

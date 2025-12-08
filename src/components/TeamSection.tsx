@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { getTeamMembers, TeamMember, TEAM_COLORS } from '@/lib/team'
+import { useLanguage } from '@/lib/LanguageContext'
 
 // داده‌های پیش‌فرض
 const DEFAULT_TEAM: TeamMember[] = [
@@ -41,6 +42,7 @@ export default function TeamSection() {
   const [members, setMembers] = useState<TeamMember[]>(DEFAULT_TEAM)
   const [isLoaded, setIsLoaded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -162,33 +164,33 @@ export default function TeamSection() {
   }
 
   return (
-    <section ref={sectionRef} id="team" className="py-24 relative overflow-hidden">
+    <section ref={sectionRef} id="team" className="py-12 sm:py-24 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 start-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-green-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 end-1/4 w-40 sm:w-80 h-40 sm:h-80 bg-blue-500/5 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-500/20 to-transparent" />
       </div>
 
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className={`text-center max-w-3xl mx-auto mb-8 sm:mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass mb-4 sm:mb-6">
+            <svg className="w-4 sm:w-5 h-4 sm:h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span className="text-sm text-gray-300">همکاران ما</span>
+            <span className="text-xs sm:text-sm text-gray-300">{t.team.badge}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            نیروهای <span className="gradient-text">کارگاه</span>
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
+            {t.team.title} <span className="gradient-text">{t.team.titleHighlight}</span>
           </h2>
-          <p className="text-gray-400 leading-relaxed">
-            افتخار ما همکاری با تیمی از متخصصین با تجربه و متعهد است که با عشق و دقت، بهترین خدمات را ارائه می‌دهند
+          <p className="text-gray-400 leading-relaxed text-sm sm:text-base px-2">
+            {t.team.description}
           </p>
         </div>
 
         {/* Team Grid */}
-        <div className={`grid ${getGridCols()} gap-6`}>
+        <div className={`grid ${getGridCols()} gap-4 sm:gap-6`}>
           {members.map((member, index) => {
             const colorClasses = getColorClasses(member.color)
             const gradient = getColorGradient(member.color)
@@ -202,52 +204,52 @@ export default function TeamSection() {
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 {/* Card */}
-                <div className="relative glass rounded-3xl p-6 h-full hover-card overflow-hidden">
+                <div className="relative glass rounded-2xl sm:rounded-3xl p-4 sm:p-6 h-full hover-card overflow-hidden">
                   {/* Gradient Border Effect */}
-                  <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                  <div className={`absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                   
                   {/* Top Accent Line */}
-                  <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-20 h-1 rounded-full bg-gradient-to-r ${gradient} opacity-60`} />
+                  <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-14 sm:w-20 h-0.5 sm:h-1 rounded-full bg-gradient-to-r ${gradient} opacity-60`} />
 
                   {/* Avatar */}
-                  <div className="relative mb-6">
-                    <div className={`w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br ${gradient} p-[2px] shadow-lg ${colorClasses.shadow} group-hover:scale-110 transition-transform duration-500`}>
+                  <div className="relative mb-4 sm:mb-6">
+                    <div className={`w-14 sm:w-20 h-14 sm:h-20 mx-auto rounded-xl sm:rounded-2xl bg-gradient-to-br ${gradient} p-[2px] shadow-lg ${colorClasses.shadow} group-hover:scale-110 transition-transform duration-500`}>
                       {member.image ? (
                         <img 
                           src={member.image} 
                           alt={member.name}
-                          className="w-full h-full rounded-2xl object-cover"
+                          className="w-full h-full rounded-xl sm:rounded-2xl object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full rounded-2xl bg-slate-900 flex items-center justify-center">
-                          <div className={colorClasses.text}>
+                        <div className="w-full h-full rounded-xl sm:rounded-2xl bg-slate-900 flex items-center justify-center">
+                          <div className={`${colorClasses.text} scale-75 sm:scale-100`}>
                             {getIcon(member.role)}
                           </div>
                         </div>
                       )}
                     </div>
                     {/* Status Dot */}
-                    <div className={`absolute bottom-0 right-1/2 translate-x-6 w-4 h-4 rounded-full bg-gradient-to-br ${gradient} border-2 border-slate-900`} />
+                    <div className={`absolute bottom-0 end-1/2 translate-x-4 sm:translate-x-6 rtl:-translate-x-4 rtl:sm:-translate-x-6 w-3 sm:w-4 h-3 sm:h-4 rounded-full bg-gradient-to-br ${gradient} border-2 border-slate-900`} />
                   </div>
 
                   {/* Info */}
                   <div className="text-center">
-                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
+                    <h3 className="text-sm sm:text-lg font-bold text-white mb-1.5 sm:mb-2 group-hover:text-green-400 transition-colors line-clamp-1">
                       {member.name}
                     </h3>
-                    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${colorClasses.bg} ${colorClasses.border} border`}>
-                      <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${gradient}`} />
-                      <span className={`text-sm font-medium ${colorClasses.text}`}>{member.role}</span>
+                    <div className={`inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full ${colorClasses.bg} ${colorClasses.border} border`}>
+                      <span className={`w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-gradient-to-r ${gradient}`} />
+                      <span className={`text-xs sm:text-sm font-medium ${colorClasses.text} line-clamp-1`}>{member.role}</span>
                     </div>
                     
                     {/* View Profile Button */}
-                    <div className="mt-4">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20 group-hover:bg-green-500/20 group-hover:border-green-500/40 transition-all duration-300`}>
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="mt-3 sm:mt-4">
+                      <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20 group-hover:bg-green-500/20 group-hover:border-green-500/40 transition-all duration-300`}>
+                        <svg className="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
-                        مشاهده پروفایل
+                        {t.team.viewProfile}
                       </span>
                     </div>
                   </div>
@@ -258,24 +260,24 @@ export default function TeamSection() {
         </div>
 
         {/* Bottom Stats */}
-        <div className={`mt-16 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="glass rounded-2xl p-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div className={`mt-8 sm:mt-16 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
               <div>
-                <div className="text-3xl font-bold gradient-text mb-1">{members.length}</div>
-                <div className="text-gray-400 text-sm">نفر متخصص</div>
+                <div className="text-xl sm:text-3xl font-bold gradient-text mb-0.5 sm:mb-1">{members.length}</div>
+                <div className="text-gray-400 text-xs sm:text-sm">{t.team.stats.specialists}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold gradient-text mb-1">+۳۰</div>
-                <div className="text-gray-400 text-sm">سال تجربه</div>
+                <div className="text-xl sm:text-3xl font-bold gradient-text mb-0.5 sm:mb-1">+۳۰</div>
+                <div className="text-gray-400 text-xs sm:text-sm">{t.team.stats.experience}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold gradient-text mb-1">+۵۰۰</div>
-                <div className="text-gray-400 text-sm">پروژه موفق</div>
+                <div className="text-xl sm:text-3xl font-bold gradient-text mb-0.5 sm:mb-1">+۵۰۰</div>
+                <div className="text-gray-400 text-xs sm:text-sm">{t.team.stats.projects}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold gradient-text mb-1">۱۰۰٪</div>
-                <div className="text-gray-400 text-sm">رضایت مشتری</div>
+                <div className="text-xl sm:text-3xl font-bold gradient-text mb-0.5 sm:mb-1">۱۰۰٪</div>
+                <div className="text-gray-400 text-xs sm:text-sm">{t.team.stats.satisfaction}</div>
               </div>
             </div>
           </div>

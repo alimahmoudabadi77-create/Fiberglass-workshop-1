@@ -36,28 +36,28 @@ export default function AdminPage() {
     setCheckingAuth(false)
 
     if (authenticated) {
-      const currentSettings = getSettings()
-      setSettings(currentSettings)
-      
-      // Update unread messages count
-      const updateUnread = () => {
-        setUnreadMessages(getUnreadMessagesCount())
-        setUnreadChats(getTotalUnreadChats())
-      }
-      updateUnread()
-      
-      window.addEventListener('messagesUpdated', updateUnread)
-      window.addEventListener('chatsUpdated', updateUnread)
-      window.addEventListener('storage', updateUnread)
-      
-      const interval = setInterval(updateUnread, 1000)
-      
-      return () => {
-        window.removeEventListener('messagesUpdated', updateUnread)
-        window.removeEventListener('chatsUpdated', updateUnread)
-        window.removeEventListener('storage', updateUnread)
-        clearInterval(interval)
-      }
+    const currentSettings = getSettings()
+    setSettings(currentSettings)
+    
+    // Update unread messages count
+    const updateUnread = () => {
+      setUnreadMessages(getUnreadMessagesCount())
+      setUnreadChats(getTotalUnreadChats())
+    }
+    updateUnread()
+    
+    window.addEventListener('messagesUpdated', updateUnread)
+    window.addEventListener('chatsUpdated', updateUnread)
+    window.addEventListener('storage', updateUnread)
+    
+    const interval = setInterval(updateUnread, 1000)
+    
+    return () => {
+      window.removeEventListener('messagesUpdated', updateUnread)
+      window.removeEventListener('chatsUpdated', updateUnread)
+      window.removeEventListener('storage', updateUnread)
+      clearInterval(interval)
+    }
     }
   }, [isAuthenticated])
 

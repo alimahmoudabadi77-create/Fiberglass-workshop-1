@@ -8,7 +8,7 @@ import Dashboard from '@/components/admin/Dashboard'
 import SecurityManager from '@/components/admin/SecurityManager'
 import ResumeManager from '@/components/admin/ResumeManager'
 import LoginForm from '@/components/admin/LoginForm'
-import { isLoggedIn, logout } from '@/lib/auth'
+import { isLoggedIn, logout, refreshSession } from '@/lib/auth'
 
 export default function DesignerAdminPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -36,12 +36,31 @@ export default function DesignerAdminPage() {
         setLockMessage(newSettings.lockMessage)
       }
 
+      // تمدید session هنگام فعالیت کاربر
+      const handleActivity = () => {
+        refreshSession('designer')
+      }
+      
+      // بررسی دوره‌ای وضعیت احراز هویت
+      const checkAuth = () => {
+        if (!isLoggedIn('designer')) {
+          setIsAuthenticated(false)
+        }
+      }
+
       window.addEventListener('storage', handleUpdate)
+      window.addEventListener('click', handleActivity)
+      window.addEventListener('keydown', handleActivity)
+      
       const interval = setInterval(handleUpdate, 1000)
+      const authCheckInterval = setInterval(checkAuth, 60000) // هر دقیقه بررسی کن
 
       return () => {
         window.removeEventListener('storage', handleUpdate)
+        window.removeEventListener('click', handleActivity)
+        window.removeEventListener('keydown', handleActivity)
         clearInterval(interval)
+        clearInterval(authCheckInterval)
       }
     }
   }, [isAuthenticated])
@@ -192,14 +211,14 @@ export default function DesignerAdminPage() {
               onClick={() => setActiveSection('security')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeSection === 'security'
-                  ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                  ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
                   : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
               </svg>
-              امنیت سایبری
+              تنظیمات ورود
             </button>
 
             <button
@@ -256,7 +275,7 @@ export default function DesignerAdminPage() {
           ) : activeSection === 'dashboard' ? (
             <Dashboard showClearButton={true} />
           ) : activeSection === 'security' ? (
-            <SecurityManager />
+            <SecurityManager userRole="designer" />
           ) : activeSection === 'resume' ? (
             <ResumeManager />
           ) : (

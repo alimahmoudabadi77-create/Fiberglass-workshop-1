@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { getTeamMemberById, TeamMember, TEAM_COLORS } from '@/lib/team'
+import { getTeamMemberById, TeamMember, TEAM_COLORS, getLocalizedText, getLocalizedArray } from '@/lib/team'
+import { useLanguage } from '@/lib/LanguageContext'
 
 interface TeamMemberClientProps {
   id: string
@@ -11,6 +12,11 @@ interface TeamMemberClientProps {
 export default function TeamMemberClient({ id }: TeamMemberClientProps) {
   const [member, setMember] = useState<TeamMember | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const { language, t } = useLanguage()
+  
+  // تبدیل زبان به فرمت مورد نیاز
+  const lang = (language === 'fa' ? 'fa' : 'en') as 'fa' | 'en'
+  const isRTL = language === 'fa'
 
   useEffect(() => {
     if (id) {
@@ -38,8 +44,9 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
     return colors[color] || colors.blue
   }
 
-  const getIcon = (role: string) => {
-    const roleLower = role.toLowerCase()
+  const getIcon = (role: string | { fa: string; en: string }) => {
+    const roleText = typeof role === 'string' ? role : (role.fa || role.en || '')
+    const roleLower = roleText.toLowerCase()
     
     if (roleLower.includes('جوش')) {
       return (
@@ -95,15 +102,17 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-4">عضو مورد نظر یافت نشد</h1>
+          <h1 className="text-2xl font-bold text-white mb-4">
+            {lang === 'fa' ? 'عضو مورد نظر یافت نشد' : 'Member not found'}
+          </h1>
           <Link
             href="/#team"
             className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`w-5 h-5 ${!isRTL ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            بازگشت به تیم
+            {lang === 'fa' ? 'بازگشت به تیم' : 'Back to Team'}
           </Link>
         </div>
       </div>
@@ -114,11 +123,11 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
   const gradient = getColorGradient(member.color)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className={`absolute top-0 right-0 w-[600px] h-[600px] ${colorClasses.bgLight} rounded-full blur-3xl opacity-30`} />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-500/10 rounded-full blur-3xl" />
+        <div className={`absolute top-0 ${isRTL ? 'right-0' : 'left-0'} w-[600px] h-[600px] ${colorClasses.bgLight} rounded-full blur-3xl opacity-30`} />
+        <div className={`absolute bottom-0 ${isRTL ? 'left-0' : 'right-0'} w-[400px] h-[400px] bg-green-500/10 rounded-full blur-3xl`} />
       </div>
 
       {/* Navigation */}
@@ -128,10 +137,10 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
             href="/#team"
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
           >
-            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`w-5 h-5 group-hover:${isRTL ? 'translate-x-1' : '-translate-x-1'} transition-transform ${!isRTL ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-            بازگشت به تیم
+            {lang === 'fa' ? 'بازگشت به تیم' : 'Back to Team'}
           </Link>
         </div>
       </nav>
@@ -171,14 +180,14 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
               </div>
 
               {/* Info */}
-              <div className="flex-1 text-center lg:text-right">
-                <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">{member.name}</h1>
+              <div className={`flex-1 text-center ${isRTL ? 'lg:text-right' : 'lg:text-left'}`}>
+                <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">{getLocalizedText(member.name, lang)}</h1>
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${colorClasses.bgLight} ${colorClasses.border} border mb-6`}>
                   <span className={`w-2 h-2 rounded-full ${colorClasses.bg}`} />
-                  <span className={`text-lg font-medium ${colorClasses.text}`}>{member.role}</span>
+                  <span className={`text-lg font-medium ${colorClasses.text}`}>{getLocalizedText(member.role, lang)}</span>
                 </div>
                 {member.bio && (
-                  <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">{member.bio}</p>
+                  <p className="text-gray-400 text-lg leading-relaxed max-w-2xl">{getLocalizedText(member.bio, lang)}</p>
                 )}
               </div>
 
@@ -187,13 +196,13 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                 {member.experience && (
                   <div className="glass rounded-2xl p-4 text-center min-w-[100px]">
                     <div className={`text-3xl font-bold ${colorClasses.text}`}>{member.experience}</div>
-                    <div className="text-gray-400 text-sm">سال تجربه</div>
+                    <div className="text-gray-400 text-sm">{lang === 'fa' ? 'سال تجربه' : 'Years Exp.'}</div>
                   </div>
                 )}
                 {member.skills && (
                   <div className="glass rounded-2xl p-4 text-center min-w-[100px]">
                     <div className={`text-3xl font-bold ${colorClasses.text}`}>{member.skills.length}</div>
-                    <div className="text-gray-400 text-sm">مهارت</div>
+                    <div className="text-gray-400 text-sm">{lang === 'fa' ? 'مهارت' : 'Skills'}</div>
                   </div>
                 )}
               </div>
@@ -211,9 +220,9 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold text-white">درباره من</h2>
+                  <h2 className="text-2xl font-bold text-white">{lang === 'fa' ? 'درباره من' : 'About Me'}</h2>
                 </div>
-                <p className="text-gray-400 leading-relaxed text-lg">{member.description}</p>
+                <p className="text-gray-400 leading-relaxed text-lg">{getLocalizedText(member.description, lang)}</p>
               </div>
             )}
 
@@ -226,10 +235,10 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold text-white">مهارت‌ها</h2>
+                  <h2 className="text-2xl font-bold text-white">{lang === 'fa' ? 'مهارت‌ها' : 'Skills'}</h2>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  {member.skills.map((skill, index) => (
+                  {getLocalizedArray(member.skills, lang).map((skill, index) => (
                     <div
                       key={index}
                       className={`px-4 py-2 rounded-xl ${colorClasses.bgLight} ${colorClasses.border} border ${colorClasses.text} font-medium`}
@@ -250,10 +259,10 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold text-white">دستاوردها</h2>
+                  <h2 className="text-2xl font-bold text-white">{lang === 'fa' ? 'دستاوردها' : 'Achievements'}</h2>
                 </div>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {member.achievements.map((achievement, index) => (
+                  {getLocalizedArray(member.achievements, lang).map((achievement, index) => (
                     <div
                       key={index}
                       className="flex items-start gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
@@ -274,7 +283,9 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
           {/* Contact CTA */}
           <div className="mt-12 text-center">
             <div className="glass rounded-3xl p-8 inline-block">
-              <p className="text-gray-400 mb-4">برای همکاری یا سوال با ما تماس بگیرید</p>
+              <p className="text-gray-400 mb-4">
+                {lang === 'fa' ? 'برای همکاری یا سوال با ما تماس بگیرید' : 'Contact us for collaboration or questions'}
+              </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 {/* Direct Call Button - Only shows if phone exists */}
                 {member.phone && (
@@ -285,7 +296,7 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
-                    تماس مستقیم
+                    {lang === 'fa' ? 'تماس مستقیم' : 'Direct Call'}
                   </a>
                 )}
                 <Link
@@ -295,7 +306,7 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  تماس با ما
+                  {lang === 'fa' ? 'تماس با ما' : 'Contact Us'}
                 </Link>
               </div>
             </div>
@@ -306,7 +317,9 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
       {/* Footer */}
       <footer className="relative z-10 py-8 border-t border-white/10">
         <div className="container mx-auto px-4 lg:px-8 text-center">
-          <p className="text-gray-500 text-sm">کارگاه فایبرگلاس - تمامی حقوق محفوظ است</p>
+          <p className="text-gray-500 text-sm">
+            {lang === 'fa' ? 'کارگاه فایبرگلاس - تمامی حقوق محفوظ است' : 'Fiberglass Workshop - All Rights Reserved'}
+          </p>
         </div>
       </footer>
     </div>

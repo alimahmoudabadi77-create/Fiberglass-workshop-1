@@ -6,11 +6,7 @@ import { Language } from '@/lib/translations'
 
 const languages: { code: Language; name: string; flag: string; nativeName: string }[] = [
   { code: 'en', name: 'English', flag: '🇬🇧', nativeName: 'English' },
-  { code: 'de', name: 'German', flag: '🇩🇪', nativeName: 'Deutsch' },
   { code: 'fa', name: 'Persian', flag: '🇮🇷', nativeName: 'فارسی' },
-  { code: 'ru', name: 'Russian', flag: '🇷🇺', nativeName: 'Русский' },
-  { code: 'fr', name: 'French', flag: '🇫🇷', nativeName: 'Français' },
-  { code: 'ar', name: 'Arabic', flag: '🇸🇦', nativeName: 'العربية' },
 ]
 
 export default function LanguageSwitcher() {

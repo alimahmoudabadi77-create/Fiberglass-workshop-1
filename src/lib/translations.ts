@@ -234,6 +234,27 @@ export const translations = {
         contact: 'Contact Us',
       },
     },
+
+    // Designer Page
+    designer: {
+      backToSite: 'Back to Website',
+      aboutMe: 'About Me',
+      skills: 'Skills',
+      portfolio: 'Portfolio',
+      contact: 'Contact',
+      yearsExperience: 'Years Experience',
+      successfulProjects: 'Successful Projects',
+      customerSatisfaction: 'Customer Satisfaction',
+      programmingLanguages: 'Programming Languages',
+      frameworksAndLibraries: 'Frameworks & Libraries',
+      tools: 'Tools',
+      noPortfolio: 'No portfolio added',
+      contactMe: 'Contact Me',
+      phoneNumber: 'Phone Number',
+      email: 'Email',
+      callNow: 'Call Now',
+      designedWithLove: 'Designed with ❤️',
+    },
     
     // DateTime
     dateTime: {
@@ -635,6 +656,27 @@ export const translations = {
         contact: 'Kontakt',
       },
     },
+
+    // Designer Page
+    designer: {
+      backToSite: 'Zurück zur Website',
+      aboutMe: 'Über mich',
+      skills: 'Fähigkeiten',
+      portfolio: 'Portfolio',
+      contact: 'Kontakt',
+      yearsExperience: 'Jahre Erfahrung',
+      successfulProjects: 'Erfolgreiche Projekte',
+      customerSatisfaction: 'Kundenzufriedenheit',
+      programmingLanguages: 'Programmiersprachen',
+      frameworksAndLibraries: 'Frameworks & Bibliotheken',
+      tools: 'Werkzeuge',
+      noPortfolio: 'Kein Portfolio hinzugefügt',
+      contactMe: 'Kontaktieren Sie mich',
+      phoneNumber: 'Telefonnummer',
+      email: 'E-Mail',
+      callNow: 'Jetzt anrufen',
+      designedWithLove: 'Mit ❤️ gestaltet',
+    },
     
     // DateTime
     dateTime: {
@@ -1035,6 +1077,27 @@ export const translations = {
         services: 'خدمات',
         contact: 'تماس با ما',
       },
+    },
+
+    // Designer Page
+    designer: {
+      backToSite: 'بازگشت به سایت',
+      aboutMe: 'درباره من',
+      skills: 'مهارت‌ها',
+      portfolio: 'نمونه‌کارها',
+      contact: 'تماس',
+      yearsExperience: 'سال تجربه',
+      successfulProjects: 'پروژه موفق',
+      customerSatisfaction: 'رضایت مشتری',
+      programmingLanguages: 'زبان‌های برنامه‌نویسی',
+      frameworksAndLibraries: 'فریمورک‌ها و کتابخانه‌ها',
+      tools: 'ابزارها',
+      noPortfolio: 'نمونه کاری اضافه نشده است',
+      contactMe: 'تماس با من',
+      phoneNumber: 'شماره تماس',
+      email: 'ایمیل',
+      callNow: 'تماس بگیرید',
+      designedWithLove: 'طراحی شده با ❤️',
     },
     
     // DateTime
@@ -1438,6 +1501,27 @@ export const translations = {
         contact: 'Контакты',
       },
     },
+
+    // Designer Page
+    designer: {
+      backToSite: 'Вернуться на сайт',
+      aboutMe: 'Обо мне',
+      skills: 'Навыки',
+      portfolio: 'Портфолио',
+      contact: 'Контакт',
+      yearsExperience: 'Лет опыта',
+      successfulProjects: 'Успешных проектов',
+      customerSatisfaction: 'Удовлетворённость клиентов',
+      programmingLanguages: 'Языки программирования',
+      frameworksAndLibraries: 'Фреймворки и библиотеки',
+      tools: 'Инструменты',
+      noPortfolio: 'Портфолио не добавлено',
+      contactMe: 'Связаться со мной',
+      phoneNumber: 'Номер телефона',
+      email: 'Эл. почта',
+      callNow: 'Позвонить',
+      designedWithLove: 'Создано с ❤️',
+    },
     
     // DateTime
     dateTime: {},
@@ -1838,6 +1922,27 @@ export const translations = {
         contact: 'Contact',
       },
     },
+
+    // Designer Page
+    designer: {
+      backToSite: 'Retour au site',
+      aboutMe: 'À propos de moi',
+      skills: 'Compétences',
+      portfolio: 'Portfolio',
+      contact: 'Contact',
+      yearsExperience: 'Années d\'expérience',
+      successfulProjects: 'Projets réussis',
+      customerSatisfaction: 'Satisfaction client',
+      programmingLanguages: 'Langages de programmation',
+      frameworksAndLibraries: 'Frameworks et bibliothèques',
+      tools: 'Outils',
+      noPortfolio: 'Aucun portfolio ajouté',
+      contactMe: 'Me contacter',
+      phoneNumber: 'Numéro de téléphone',
+      email: 'E-mail',
+      callNow: 'Appeler maintenant',
+      designedWithLove: 'Conçu avec ❤️',
+    },
     
     // DateTime
     dateTime: {},
@@ -2237,6 +2342,27 @@ export const translations = {
         services: 'الخدمات',
         contact: 'اتصل بنا',
       },
+    },
+
+    // Designer Page
+    designer: {
+      backToSite: 'العودة إلى الموقع',
+      aboutMe: 'عني',
+      skills: 'المهارات',
+      portfolio: 'أعمالي',
+      contact: 'اتصل',
+      yearsExperience: 'سنوات الخبرة',
+      successfulProjects: 'مشاريع ناجحة',
+      customerSatisfaction: 'رضا العملاء',
+      programmingLanguages: 'لغات البرمجة',
+      frameworksAndLibraries: 'الأطر والمكتبات',
+      tools: 'الأدوات',
+      noPortfolio: 'لم يتم إضافة أعمال',
+      contactMe: 'تواصل معي',
+      phoneNumber: 'رقم الهاتف',
+      email: 'البريد الإلكتروني',
+      callNow: 'اتصل الآن',
+      designedWithLove: 'صُمم بـ ❤️',
     },
     
     // DateTime

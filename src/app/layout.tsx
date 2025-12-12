@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="fa" dir="rtl">
       <body className="font-sans antialiased overflow-x-hidden">
         <LanguageProvider>
           <VisitorTracker />

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { getStats, clearAnalytics, VisitorInfo } from '@/lib/analytics'
-import { useLanguage } from '@/lib/LanguageContext'
+import { useAdminLanguage } from '@/lib/AdminLanguageContext'
 
 interface DashboardProps {
   showClearButton?: boolean
@@ -12,7 +12,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
   const [stats, setStats] = useState<ReturnType<typeof getStats> | null>(null)
   const [selectedVisitor, setSelectedVisitor] = useState<VisitorInfo | null>(null)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
-  const { t, language } = useLanguage()
+  const { t, language } = useAdminLanguage()
 
   useEffect(() => {
     const loadStats = () => {

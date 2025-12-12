@@ -4,19 +4,44 @@ import { useEffect, useRef, useState } from 'react'
 import { getAboutContent, AboutContent } from '@/lib/about'
 import { useLanguage } from '@/lib/LanguageContext'
 
+// محتوای پیش‌فرض برای نمایش فوری
+const DEFAULT_FEATURES = [
+  { id: '1', title: '', description: '', iconType: 'quality' as const },
+  { id: '2', title: '', description: '', iconType: 'speed' as const },
+  { id: '3', title: '', description: '', iconType: 'team' as const },
+  { id: '4', title: '', description: '', iconType: 'price' as const }
+]
+
 export default function AboutSection() {
   const [isVisible, setIsVisible] = useState(false)
-  const [content, setContent] = useState<AboutContent | null>(null)
+  const [content, setContent] = useState<AboutContent>({
+    sectionTitle: '',
+    mainTitle: '',
+    highlightText: '',
+    mainTitleEnd: '',
+    description1: '',
+    description2: '',
+    establishmentYear: '',
+    establishmentLabel: '',
+    features: DEFAULT_FEATURES,
+    lastUpdated: ''
+  })
   const sectionRef = useRef<HTMLElement>(null)
   const { t } = useLanguage()
 
   useEffect(() => {
     // Load content from localStorage
-    setContent(getAboutContent())
+    const loadedContent = getAboutContent()
+    if (loadedContent) {
+      setContent(loadedContent)
+    }
 
     // Listen for updates from admin panel
     const handleUpdate = () => {
-      setContent(getAboutContent())
+      const updatedContent = getAboutContent()
+      if (updatedContent) {
+        setContent(updatedContent)
+      }
     }
     window.addEventListener('aboutUpdated', handleUpdate)
     window.addEventListener('storage', handleUpdate)
@@ -34,14 +59,30 @@ export default function AboutSection() {
           setIsVisible(true)
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 } // کاهش threshold برای تشخیص سریع‌تر
     )
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current)
     }
 
-    return () => observer.disconnect()
+    // اگر از hash link آمدیم، فوراً نمایش بده
+    if (window.location.hash === '#about') {
+      setIsVisible(true)
+    }
+
+    // گوش دادن به تغییرات hash
+    const handleHashChange = () => {
+      if (window.location.hash === '#about') {
+        setIsVisible(true)
+      }
+    }
+    window.addEventListener('hashchange', handleHashChange)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('hashchange', handleHashChange)
+    }
   }, [])
 
   const getIconForType = (type: string) => {
@@ -88,17 +129,6 @@ export default function AboutSection() {
       default:
         return { title: '', description: '' }
     }
-  }
-
-  // Show loading or default content while loading
-  if (!content) {
-    return (
-      <section id="about" className="py-24 relative">
-        <div className="container mx-auto px-4 lg:px-8 flex items-center justify-center">
-          <div className="w-10 h-10 border-3 border-green-500 border-t-transparent rounded-full animate-spin" />
-        </div>
-      </section>
-    )
   }
 
   return (

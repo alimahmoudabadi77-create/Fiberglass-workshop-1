@@ -63,12 +63,18 @@ export default function HeroSection() {
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
-            <a
-              href="#about"
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl glass text-white font-semibold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base text-center"
+            <button
+              onClick={() => {
+                const aboutSection = document.getElementById('about')
+                if (aboutSection) {
+                  aboutSection.scrollIntoView({ behavior: 'smooth' })
+                  window.history.pushState(null, '', '#about')
+                }
+              }}
+              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl glass text-white font-semibold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base text-center cursor-pointer"
             >
               {t.hero.learnMore}
-            </a>
+            </button>
           </div>
 
           {/* Stats */}

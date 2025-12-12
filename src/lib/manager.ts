@@ -5,6 +5,7 @@ export interface ManagerInfo {
   lastName: string
   phone: string
   title: string
+  photo?: string // Base64 encoded image
   lastUpdated: string
 }
 
@@ -15,6 +16,7 @@ const defaultManager: ManagerInfo = {
   lastName: 'غارسی',
   phone: '09173147318',
   title: 'مدیر کارگاه فایبرگلاس',
+  photo: '',
   lastUpdated: new Date().toISOString()
 }
 

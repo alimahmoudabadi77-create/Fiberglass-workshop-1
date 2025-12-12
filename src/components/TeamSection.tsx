@@ -2,47 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { getTeamMembers, TeamMember, TEAM_COLORS } from '@/lib/team'
+import { getTeamMembers, TeamMember, TEAM_COLORS, getLocalizedText } from '@/lib/team'
 import { useLanguage } from '@/lib/LanguageContext'
-
-// داده‌های پیش‌فرض
-const DEFAULT_TEAM: TeamMember[] = [
-  {
-    id: '1',
-    name: 'علی غارسی',
-    role: 'جوشکار',
-    color: 'orange',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    name: 'میلاد غارسی',
-    role: 'فایبر و جوشکاری',
-    color: 'blue',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    name: 'علی محمدآبادی',
-    role: 'بازاریاب و طراح',
-    color: 'purple',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    name: 'غلامرضا موسی',
-    role: 'نقاش',
-    color: 'emerald',
-    createdAt: new Date().toISOString(),
-  },
-]
 
 export default function TeamSection() {
   const [isVisible, setIsVisible] = useState(false)
-  const [members, setMembers] = useState<TeamMember[]>(DEFAULT_TEAM)
+  const [members, setMembers] = useState<TeamMember[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  
+  // تبدیل زبان به فرمت مورد نیاز
+  const lang = (language === 'fa' ? 'fa' : 'en') as 'fa' | 'en'
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -72,7 +43,6 @@ export default function TeamSection() {
         setIsLoaded(true)
       } catch (error) {
         console.error('Error loading team:', error)
-        setMembers(DEFAULT_TEAM)
         setIsLoaded(true)
       }
     }
@@ -114,8 +84,9 @@ export default function TeamSection() {
     return colors[color] || colors.blue
   }
 
-  const getIcon = (role: string) => {
-    const roleLower = role.toLowerCase()
+  const getIcon = (role: string | { fa: string; en: string }) => {
+    const roleText = typeof role === 'string' ? role : (role.fa || role.en || '')
+    const roleLower = roleText.toLowerCase()
     
     if (roleLower.includes('جوش')) {
       return (
@@ -235,11 +206,11 @@ export default function TeamSection() {
                   {/* Info */}
                   <div className="text-center">
                     <h3 className="text-sm sm:text-lg font-bold text-white mb-1.5 sm:mb-2 group-hover:text-green-400 transition-colors line-clamp-1">
-                      {member.name}
+                      {getLocalizedText(member.name, lang)}
                     </h3>
                     <div className={`inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full ${colorClasses.bg} ${colorClasses.border} border`}>
                       <span className={`w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-gradient-to-r ${gradient}`} />
-                      <span className={`text-xs sm:text-sm font-medium ${colorClasses.text} line-clamp-1`}>{member.role}</span>
+                      <span className={`text-xs sm:text-sm font-medium ${colorClasses.text} line-clamp-1`}>{getLocalizedText(member.role, lang)}</span>
                     </div>
                     
                     {/* View Profile Button */}

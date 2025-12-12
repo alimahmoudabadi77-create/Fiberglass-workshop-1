@@ -3,10 +3,14 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { getResume, ResumeData } from '@/lib/resume'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function DesignerPage() {
   const [activeTab, setActiveTab] = useState<'about' | 'skills' | 'portfolio' | 'contact'>('about')
   const [resume, setResume] = useState<ResumeData | null>(null)
+  const { t, language } = useLanguage()
+
+  const isRTL = language === 'fa' || language === 'ar'
 
   useEffect(() => {
     setResume(getResume())
@@ -33,7 +37,7 @@ export default function DesignerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-3xl" />
@@ -48,10 +52,10 @@ export default function DesignerPage() {
             href="/"
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
           >
-            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`w-5 h-5 transition-transform ${isRTL ? 'group-hover:translate-x-1' : 'group-hover:-translate-x-1 rotate-180'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-            بازگشت به سایت
+            {t.designer.backToSite}
           </Link>
         </div>
       </header>
@@ -81,7 +85,7 @@ export default function DesignerPage() {
               </div>
 
               {/* Info */}
-              <div className="flex-1 text-center md:text-right">
+              <div className={`flex-1 text-center ${isRTL ? 'md:text-right' : 'md:text-left'}`}>
                 <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">{resume.name}</h1>
                 <p className="text-purple-400 font-medium mb-4">{resume.title}</p>
                 <p className="text-gray-400 leading-relaxed mb-6">
@@ -89,7 +93,7 @@ export default function DesignerPage() {
                 </p>
                 
                 {/* Social Links */}
-                <div className="flex items-center justify-center md:justify-start gap-3">
+                <div className={`flex items-center justify-center ${isRTL ? 'md:justify-start' : 'md:justify-start'} gap-3`}>
                   <a href={resume.socialLinks.instagram} className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-purple-500/20 flex items-center justify-center text-gray-400 hover:text-purple-400 transition-colors">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.995 17.176c-.198.47-.812.862-1.702.862H8.707c-.89 0-1.504-.392-1.702-.862-.066-.156-.1-.322-.1-.496V7.32c0-.174.034-.34.1-.496.198-.47.812-.862 1.702-.862h6.586c.89 0 1.504.392 1.702.862.066.156.1.322.1.496v9.36c0 .174-.034.34-.1.496z"/>
@@ -120,10 +124,10 @@ export default function DesignerPage() {
         <div className="max-w-4xl mx-auto mb-8">
           <div className="flex items-center justify-center gap-2 p-1.5 bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-800">
             {[
-              { id: 'about', label: 'درباره من', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-              { id: 'skills', label: 'مهارت‌ها', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
-              { id: 'portfolio', label: 'نمونه‌کارها', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
-              { id: 'contact', label: 'تماس', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+              { id: 'about', label: t.designer.aboutMe, icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+              { id: 'skills', label: t.designer.skills, icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
+              { id: 'portfolio', label: t.designer.portfolio, icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
+              { id: 'contact', label: t.designer.contact, icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -147,25 +151,25 @@ export default function DesignerPage() {
         <div className="max-w-4xl mx-auto">
           {activeTab === 'about' && (
             <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-800 p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">درباره من</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">{t.designer.aboutMe}</h2>
               <div className="space-y-6 text-gray-400 leading-relaxed">
                 {resume.aboutText.map((text, index) => (
-                  <p key={index} dangerouslySetInnerHTML={{ __html: text.replace(/(\d+\s*سال)/g, '<span class="text-purple-400 font-semibold">$1</span>') }} />
+                  <p key={index} dangerouslySetInnerHTML={{ __html: text.replace(/(\d+\s*سال|\d+\s*years?)/gi, '<span class="text-purple-400 font-semibold">$1</span>') }} />
                 ))}
                 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-4 pt-4">
                   <div className="bg-slate-800/50 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-purple-400 mb-1">{resume.stats.experience}</div>
-                    <div className="text-gray-500 text-sm">سال تجربه</div>
+                    <div className="text-gray-500 text-sm">{t.designer.yearsExperience}</div>
                   </div>
                   <div className="bg-slate-800/50 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-pink-400 mb-1">{resume.stats.projects}</div>
-                    <div className="text-gray-500 text-sm">پروژه موفق</div>
+                    <div className="text-gray-500 text-sm">{t.designer.successfulProjects}</div>
                   </div>
                   <div className="bg-slate-800/50 rounded-2xl p-4 text-center">
                     <div className="text-3xl font-bold text-blue-400 mb-1">{resume.stats.satisfaction}</div>
-                    <div className="text-gray-500 text-sm">رضایت مشتری</div>
+                    <div className="text-gray-500 text-sm">{t.designer.customerSatisfaction}</div>
                   </div>
                 </div>
               </div>
@@ -174,11 +178,11 @@ export default function DesignerPage() {
 
           {activeTab === 'skills' && (
             <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-800 p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">مهارت‌ها</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">{t.designer.skills}</h2>
               
               {/* Programming Languages */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-purple-400 mb-4">زبان‌های برنامه‌نویسی</h3>
+                <h3 className="text-lg font-semibold text-purple-400 mb-4">{t.designer.programmingLanguages}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {resume.programmingLanguages.map((lang) => (
                     <div key={lang.name} className="bg-slate-800/50 rounded-xl p-3 text-center hover:scale-105 transition-transform">
@@ -193,7 +197,7 @@ export default function DesignerPage() {
 
               {/* Frameworks */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-pink-400 mb-4">فریمورک‌ها و کتابخانه‌ها</h3>
+                <h3 className="text-lg font-semibold text-pink-400 mb-4">{t.designer.frameworksAndLibraries}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {resume.frameworks.map((fw) => (
                     <div key={fw.name} className="bg-slate-800/50 rounded-xl p-3 text-center hover:scale-105 transition-transform">
@@ -208,7 +212,7 @@ export default function DesignerPage() {
 
               {/* Tools */}
               <div>
-                <h3 className="text-lg font-semibold text-blue-400 mb-4">ابزارها</h3>
+                <h3 className="text-lg font-semibold text-blue-400 mb-4">{t.designer.tools}</h3>
                 <div className="flex flex-wrap gap-2">
                   {resume.tools.map((tool) => (
                     <span key={tool} className="px-4 py-2 rounded-full bg-slate-800/50 text-gray-300 text-sm border border-slate-700 hover:border-purple-500/50 transition-colors">
@@ -222,7 +226,7 @@ export default function DesignerPage() {
 
           {activeTab === 'portfolio' && (
             <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-800 p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">نمونه‌کارها</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">{t.designer.portfolio}</h2>
               
               <div className="grid md:grid-cols-2 gap-6">
                 {resume.portfolio.map((project) => (
@@ -250,7 +254,7 @@ export default function DesignerPage() {
                       <svg className="w-12 h-12 text-slate-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <p className="text-slate-500 text-sm">نمونه کاری اضافه نشده است</p>
+                      <p className="text-slate-500 text-sm">{t.designer.noPortfolio}</p>
                     </div>
                   </div>
                 )}
@@ -260,7 +264,7 @@ export default function DesignerPage() {
 
           {activeTab === 'contact' && (
             <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-800 p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">تماس با من</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">{t.designer.contactMe}</h2>
               
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Contact Info */}
@@ -273,7 +277,7 @@ export default function DesignerPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-gray-400 text-sm">شماره تماس</p>
+                      <p className="text-gray-400 text-sm">{t.designer.phoneNumber}</p>
                       <p className="text-white font-medium group-hover:text-green-400 transition-colors" dir="ltr">{resume.contact.phone}</p>
                     </div>
                   </a>
@@ -286,7 +290,7 @@ export default function DesignerPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-gray-400 text-sm">ایمیل</p>
+                      <p className="text-gray-400 text-sm">{t.designer.email}</p>
                       <p className="text-white font-medium group-hover:text-purple-400 transition-colors text-sm" dir="ltr">{resume.contact.email}</p>
                     </div>
                   </a>
@@ -305,7 +309,7 @@ export default function DesignerPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
-                    تماس بگیرید
+                    {t.designer.callNow}
                   </a>
                 </div>
               </div>
@@ -317,7 +321,7 @@ export default function DesignerPage() {
       {/* Footer */}
       <footer className="relative z-10 py-8 mt-12 border-t border-white/10">
         <div className="container mx-auto px-4 lg:px-8 text-center">
-          <p className="text-gray-500 text-sm">طراحی شده با ❤️</p>
+          <p className="text-gray-500 text-sm">{t.designer.designedWithLove}</p>
         </div>
       </footer>
     </div>

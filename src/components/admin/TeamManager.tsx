@@ -8,9 +8,12 @@ import {
   deleteTeamMember,
   TeamMember,
   TEAM_COLORS,
-  getAutoColor
+  getAutoColor,
+  getLocalizedText,
+  getLocalizedArray,
+  LocalizedText
 } from '@/lib/team'
-import { useLanguage } from '@/lib/LanguageContext'
+import { useAdminLanguage } from '@/lib/AdminLanguageContext'
 
 export default function TeamManager() {
   const [members, setMembers] = useState<TeamMember[]>([])
@@ -19,7 +22,7 @@ export default function TeamManager() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null)
   const [showSuccess, setShowSuccess] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'basic' | 'details'>('basic')
-  const { t } = useLanguage()
+  const { t } = useAdminLanguage()
 
   // Form state
   const [formData, setFormData] = useState({
@@ -92,15 +95,31 @@ export default function TeamManager() {
     showSuccessMessage(t.admin.team.memberDeleted)
   }
 
+  // تابع کمکی برای استخراج متن از داده چندزبانه
+  const extractText = (value: string | LocalizedText | undefined): string => {
+    if (!value) return ''
+    if (typeof value === 'string') return value
+    return value.fa || value.en || ''
+  }
+
+  // تابع کمکی برای استخراج آرایه از داده چندزبانه
+  const extractArray = (arr: string[] | LocalizedText[] | undefined): string[] => {
+    if (!arr) return []
+    return arr.map(item => {
+      if (typeof item === 'string') return item
+      return item.fa || item.en || ''
+    })
+  }
+
   const openEditModal = (member: TeamMember) => {
     setFormData({
-      name: member.name,
-      role: member.role,
-      bio: member.bio || '',
+      name: extractText(member.name),
+      role: extractText(member.role),
+      bio: extractText(member.bio),
       experience: member.experience || '',
-      skills: member.skills || [],
-      description: member.description || '',
-      achievements: member.achievements || [],
+      skills: extractArray(member.skills),
+      description: extractText(member.description),
+      achievements: extractArray(member.achievements),
       phone: member.phone || '',
       image: member.image || '',
     })
@@ -245,6 +264,8 @@ export default function TeamManager() {
             {members.map((member) => {
               const colorClasses = getColorClasses(member.color)
               const gradient = getColorGradient(member.color)
+              const memberName = extractText(member.name)
+              const memberRole = extractText(member.role)
               return (
                 <div
                   key={member.id}
@@ -256,7 +277,7 @@ export default function TeamManager() {
                       {member.image ? (
                         <img 
                           src={member.image} 
-                          alt={member.name}
+                          alt={memberName}
                           className="w-full h-full rounded-xl object-cover"
                         />
                       ) : (
@@ -268,10 +289,10 @@ export default function TeamManager() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-white font-semibold truncate">{member.name}</h3>
+                      <h3 className="text-white font-semibold truncate">{memberName}</h3>
                       <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md ${colorClasses.bg} ${colorClasses.border} border mt-1`}>
                         <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${gradient}`} />
-                        <span className={`text-xs font-medium ${colorClasses.text}`}>{member.role}</span>
+                        <span className={`text-xs font-medium ${colorClasses.text}`}>{memberRole}</span>
                       </div>
                     </div>
                   </div>

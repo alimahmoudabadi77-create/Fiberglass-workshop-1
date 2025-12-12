@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getManagerInfo, saveManagerInfo, ManagerInfo, formatPhoneNumber } from '@/lib/manager'
 
 export default function ManagerManager() {
@@ -9,8 +9,10 @@ export default function ManagerManager() {
   const [lastName, setLastName] = useState('')
   const [phone, setPhone] = useState('')
   const [title, setTitle] = useState('')
+  const [photo, setPhoto] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const info = getManagerInfo()
@@ -19,6 +21,7 @@ export default function ManagerManager() {
     setLastName(info.lastName)
     setPhone(info.phone)
     setTitle(info.title)
+    setPhoto(info.photo || '')
   }, [])
 
   const handleSave = () => {
@@ -27,6 +30,7 @@ export default function ManagerManager() {
       lastName,
       phone: phone.replace(/\D/g, ''), // Store only digits
       title,
+      photo,
       lastUpdated: new Date().toISOString()
     }
     
@@ -44,8 +48,40 @@ export default function ManagerManager() {
       setLastName(manager.lastName)
       setPhone(manager.phone)
       setTitle(manager.title)
+      setPhoto(manager.photo || '')
     }
     setIsEditing(false)
+  }
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('حجم فایل نباید بیشتر از ۲ مگابایت باشد')
+      return
+    }
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      alert('لطفاً یک فایل تصویری انتخاب کنید')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const base64 = reader.result as string
+      setPhoto(base64)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleRemovePhoto = () => {
+    setPhoto('')
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   if (!manager) {
@@ -107,10 +143,14 @@ export default function ManagerManager() {
         {/* Manager Preview */}
         <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center overflow-hidden">
+              {photo ? (
+                <img src={photo} alt={`${firstName} ${lastName}`} className="w-full h-full object-cover" />
+              ) : (
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              )}
             </div>
             <div>
               <h4 className="text-xl font-bold text-white">{firstName} {lastName}</h4>
@@ -143,6 +183,60 @@ export default function ManagerManager() {
           </div>
 
           <div className="space-y-4">
+            {/* Photo Upload */}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                عکس پروفایل
+              </label>
+              <div className="flex items-center gap-4">
+                {/* Photo Preview */}
+                <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center overflow-hidden border-2 border-slate-600">
+                  {photo ? (
+                    <img src={photo} alt="پیش‌نمایش" className="w-full h-full object-cover" />
+                  ) : (
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  )}
+                </div>
+                
+                {/* Upload Buttons */}
+                <div className="flex flex-col gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                    id="photo-upload"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 text-sm font-medium hover:bg-blue-500/30 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    انتخاب عکس
+                  </button>
+                  {photo && (
+                    <button
+                      type="button"
+                      onClick={handleRemovePhoto}
+                      className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/30 transition-colors flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      حذف عکس
+                    </button>
+                  )}
+                </div>
+              </div>
+              <p className="text-slate-500 text-xs mt-2">حداکثر حجم: ۲ مگابایت | فرمت‌های مجاز: JPG, PNG, GIF</p>
+            </div>
+
             {/* First Name */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">

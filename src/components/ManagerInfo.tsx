@@ -4,15 +4,28 @@ import { useEffect, useRef, useState } from 'react'
 import { getManagerInfo, ManagerInfo as ManagerInfoType, formatPhoneNumber } from '@/lib/manager'
 import { useLanguage } from '@/lib/LanguageContext'
 
+// Default manager info for initial render
+const defaultManagerInfo: ManagerInfoType = {
+  firstName: 'محمد علی',
+  lastName: 'غارسی',
+  phone: '09173147318',
+  title: 'مدیر کارگاه فایبرگلاس',
+  photo: '',
+  lastUpdated: new Date().toISOString()
+}
+
 export default function ManagerInfo() {
   const [isVisible, setIsVisible] = useState(false)
-  const [manager, setManager] = useState<ManagerInfoType | null>(null)
+  const [manager, setManager] = useState<ManagerInfoType>(defaultManagerInfo)
+  const [isLoaded, setIsLoaded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const { t } = useLanguage()
 
   useEffect(() => {
     // Load manager info
-    setManager(getManagerInfo())
+    const info = getManagerInfo()
+    setManager(info)
+    setIsLoaded(true)
 
     // Listen for updates
     const handleUpdate = () => {
@@ -43,15 +56,13 @@ export default function ManagerInfo() {
     }
 
     return () => observer.disconnect()
-  }, [])
-
-  if (!manager) return null
+  }, [isLoaded])
 
   const phoneFormatted = formatPhoneNumber(manager.phone)
   const phoneLink = `tel:${manager.phone}`
 
   return (
-    <section ref={sectionRef} className="py-12 sm:py-24 relative overflow-hidden">
+    <section id="manager" ref={sectionRef} className="py-12 sm:py-24 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
       <div className="absolute start-0 top-1/2 -translate-y-1/2 w-48 sm:w-72 h-48 sm:h-72 bg-blue-500/10 rounded-full blur-3xl" />
@@ -75,10 +86,14 @@ export default function ManagerInfo() {
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
               {/* Avatar */}
               <div className="relative">
-                <div className="w-20 sm:w-28 h-20 sm:h-28 rounded-xl sm:rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-xl shadow-green-500/30">
-                  <svg className="w-10 sm:w-14 h-10 sm:h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-20 sm:w-28 h-20 sm:h-28 rounded-xl sm:rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-xl shadow-green-500/30 overflow-hidden">
+                  {manager.photo ? (
+                    <img src={manager.photo} alt={`${manager.firstName} ${manager.lastName}`} className="w-full h-full object-cover" />
+                  ) : (
+                    <svg className="w-10 sm:w-14 h-10 sm:h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  )}
                 </div>
                 {/* Online Badge */}
                 <div className="absolute -bottom-1 -end-1 w-5 sm:w-6 h-5 sm:h-6 rounded-full bg-green-500 border-3 sm:border-4 border-slate-900 pulse-green" />

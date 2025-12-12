@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { AdminLanguageProvider } from '@/lib/AdminLanguageContext'
 
 export const metadata: Metadata = {
   title: 'پنل مدیریت | کارگاه فایبرگلاس',
@@ -11,9 +12,11 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="admin-layout">
-      {children}
-    </div>
+    <AdminLanguageProvider>
+      <div className="admin-layout">
+        {children}
+      </div>
+    </AdminLanguageProvider>
   )
 }
 

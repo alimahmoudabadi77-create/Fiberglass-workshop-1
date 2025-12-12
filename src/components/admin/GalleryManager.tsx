@@ -8,7 +8,7 @@ import {
   deleteGalleryItem,
   GalleryItem 
 } from '@/lib/gallery'
-import { useLanguage } from '@/lib/LanguageContext'
+import { useAdminLanguage } from '@/lib/AdminLanguageContext'
 
 export default function GalleryManager() {
   const [items, setItems] = useState<GalleryItem[]>([])
@@ -17,7 +17,7 @@ export default function GalleryManager() {
   const [showSuccess, setShowSuccess] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const { t } = useLanguage()
+  const { t } = useAdminLanguage()
 
   // Edit form state
   const [editForm, setEditForm] = useState({

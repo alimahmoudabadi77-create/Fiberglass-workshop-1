@@ -15,7 +15,8 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const LANGUAGE_STORAGE_KEY = 'fiberglass_language'
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en')
+  // Default language is Persian (fa)
+  const [language, setLanguageState] = useState<Language>('fa')
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Load language from localStorage on mount
@@ -25,6 +26,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (savedLanguage && validLanguages.includes(savedLanguage)) {
       setLanguageState(savedLanguage)
     }
+    // If no saved language, keep default (fa) - Persian
     setIsInitialized(true)
   }, [])
 

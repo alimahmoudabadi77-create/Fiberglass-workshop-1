@@ -121,6 +121,7 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
 
   const colorClasses = getColorClasses(member.color)
   const gradient = getColorGradient(member.color)
+  const memberName: string = getLocalizedText(member.name, lang)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -160,7 +161,7 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                   {member.image ? (
                     <img 
                       src={member.image} 
-                      alt={getLocalizedText(member.name, lang)}
+                      alt={memberName}
                       className="w-full h-full rounded-3xl object-cover"
                     />
                   ) : (
@@ -181,7 +182,7 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
 
               {/* Info */}
               <div className={`flex-1 text-center ${isRTL ? 'lg:text-right' : 'lg:text-left'}`}>
-                <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">{getLocalizedText(member.name, lang)}</h1>
+                <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">{memberName}</h1>
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${colorClasses.bgLight} ${colorClasses.border} border mb-6`}>
                   <span className={`w-2 h-2 rounded-full ${colorClasses.bg}`} />
                   <span className={`text-lg font-medium ${colorClasses.text}`}>{getLocalizedText(member.role, lang)}</span>

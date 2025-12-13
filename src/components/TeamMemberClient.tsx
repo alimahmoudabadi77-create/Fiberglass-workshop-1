@@ -160,7 +160,7 @@ export default function TeamMemberClient({ id }: TeamMemberClientProps) {
                   {member.image ? (
                     <img 
                       src={member.image} 
-                      alt={member.name}
+                      alt={getLocalizedText(member.name, lang)}
                       className="w-full h-full rounded-3xl object-cover"
                     />
                   ) : (

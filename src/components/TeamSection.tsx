@@ -188,7 +188,7 @@ export default function TeamSection() {
                       {member.image ? (
                         <img 
                           src={member.image} 
-                          alt={member.name}
+                          alt={getLocalizedText(member.name, lang)}
                           className="w-full h-full rounded-xl sm:rounded-2xl object-cover"
                         />
                       ) : (

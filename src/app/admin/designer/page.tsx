@@ -103,6 +103,12 @@ export default function DesignerAdminPage() {
     setTimeout(() => setShowSaveSuccess(false), 3000)
   }
 
+  // تابع برای بستن منو و تغییر بخش
+  const handleSectionChange = (section: typeof activeSection) => {
+    setActiveSection(section)
+    setIsMobileMenuOpen(false)
+  }
+
   // Show loading while checking auth
   if (checkingAuth) {
     return (
@@ -269,7 +275,7 @@ export default function DesignerAdminPage() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-8 overflow-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
           {activeSection === 'home' ? (
             <DesignerWelcomeBanner />
           ) : activeSection === 'dashboard' ? (
@@ -280,35 +286,35 @@ export default function DesignerAdminPage() {
             <ResumeManager />
           ) : (
           /* Settings Section */
-          <div className="max-w-3xl">
+          <div className="max-w-3xl w-full">
             {/* Header */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">تنظیمات</h2>
-                  <p className="text-slate-400 text-sm">کنترل وضعیت وبسایت</p>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">تنظیمات</h2>
+                  <p className="text-slate-400 text-xs sm:text-sm">کنترل وضعیت وبسایت</p>
                 </div>
               </div>
             </div>
 
             {/* Site Lock Card - Main Feature */}
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-800 overflow-hidden mb-6">
+            <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-slate-800 overflow-hidden mb-4 sm:mb-6">
               {/* Card Header */}
-              <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-slate-800 p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 ${
+              <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-slate-800 p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-500 flex-shrink-0 ${
                       settings.isLocked 
                         ? 'bg-red-500/20 text-red-400 shadow-lg shadow-red-500/20' 
                         : 'bg-emerald-500/20 text-emerald-400 shadow-lg shadow-emerald-500/20'
                     }`}>
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         {settings.isLocked ? (
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         ) : (
@@ -317,13 +323,13 @@ export default function DesignerAdminPage() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-1">وضعیت وبسایت</h3>
-                      <p className="text-slate-400 text-sm">فعال یا غیرفعال کردن دسترسی کاربران</p>
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-1">وضعیت وبسایت</h3>
+                      <p className="text-slate-400 text-xs sm:text-sm">فعال یا غیرفعال کردن دسترسی کاربران</p>
                     </div>
                   </div>
 
                   {/* Status Badge */}
-                  <div className={`px-4 py-2 rounded-xl text-sm font-bold ${
+                  <div className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold ${
                     settings.isLocked 
                       ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
                       : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
@@ -335,14 +341,14 @@ export default function DesignerAdminPage() {
               </div>
 
               {/* Card Body */}
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 {/* Toggle Button */}
-                <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-800/50 border border-slate-700 mb-6">
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-800/50 border border-slate-700 mb-4 sm:mb-6">
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold mb-1 text-sm sm:text-base">
                       {settings.isLocked ? 'وبسایت غیرفعال است' : 'وبسایت فعال است'}
                     </h4>
-                    <p className="text-slate-400 text-sm">
+                    <p className="text-slate-400 text-xs sm:text-sm">
                       {settings.isLocked 
                         ? 'کاربران نمی‌توانند به وبسایت دسترسی داشته باشند' 
                         : 'کاربران می‌توانند وبسایت را مشاهده کنند'}
@@ -352,19 +358,19 @@ export default function DesignerAdminPage() {
                   {/* Big Toggle Button */}
                   <button
                     onClick={handleToggleLock}
-                    className={`relative w-20 h-10 rounded-full transition-all duration-500 ${
+                    className={`relative w-16 h-8 sm:w-20 sm:h-10 rounded-full transition-all duration-500 flex-shrink-0 ${
                       settings.isLocked ? 'bg-red-500' : 'bg-emerald-500'
                     }`}
                   >
-                    <div className={`absolute top-1 w-8 h-8 rounded-full bg-white shadow-lg transition-all duration-500 flex items-center justify-center ${
-                      settings.isLocked ? 'right-1' : 'right-11'
+                    <div className={`absolute top-0.5 sm:top-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white shadow-lg transition-all duration-500 flex items-center justify-center ${
+                      settings.isLocked ? 'right-0.5 sm:right-1' : 'right-9 sm:right-11'
                     }`}>
                       {settings.isLocked ? (
-                        <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       ) : (
-                        <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       )}
@@ -373,53 +379,53 @@ export default function DesignerAdminPage() {
                 </div>
 
                 {/* Quick Actions */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <button
                     onClick={() => {
                       if (!settings.isLocked) handleToggleLock()
                     }}
-                    className={`p-4 rounded-xl border transition-all duration-300 ${
+                    className={`p-3 sm:p-4 rounded-xl border transition-all duration-300 ${
                       settings.isLocked 
                         ? 'bg-red-500/10 border-red-500/30 text-red-400' 
                         : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400'
                     }`}
                   >
-                    <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
-                    <span className="text-sm font-medium">غیرفعال کردن</span>
+                    <span className="text-xs sm:text-sm font-medium">غیرفعال کردن</span>
                   </button>
 
                   <button
                     onClick={() => {
                       if (settings.isLocked) handleToggleLock()
                     }}
-                    className={`p-4 rounded-xl border transition-all duration-300 ${
+                    className={`p-3 sm:p-4 rounded-xl border transition-all duration-300 ${
                       !settings.isLocked 
                         ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
                         : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-400'
                     }`}
                   >
-                    <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-sm font-medium">فعال کردن</span>
+                    <span className="text-xs sm:text-sm font-medium">فعال کردن</span>
                   </button>
                 </div>
               </div>
             </div>
 
             {/* Lock Message Card */}
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-800 p-6">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-slate-800 p-4 sm:p-6">
+              <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">پیام نمایشی</h3>
-                  <p className="text-slate-500 text-sm">پیامی که هنگام غیرفعال بودن به کاربران نمایش داده می‌شود</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-white">پیام نمایشی</h3>
+                  <p className="text-slate-500 text-xs sm:text-sm">پیامی که هنگام غیرفعال بودن به کاربران نمایش داده می‌شود</p>
                 </div>
               </div>
 
@@ -427,17 +433,17 @@ export default function DesignerAdminPage() {
                 value={lockMessage}
                 onChange={(e) => setLockMessage(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-all duration-200 resize-none mb-4"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm placeholder-slate-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-all duration-200 resize-none mb-4"
                 placeholder="پیام خود را وارد کنید..."
               />
 
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
                 <div className="text-slate-500 text-xs">
                   این پیام به کاربران نمایش داده می‌شود
                 </div>
                 <button
                   onClick={handleSaveMessage}
-                  className="px-5 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium transition-all duration-200 flex items-center gap-2"
+                  className="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -448,7 +454,7 @@ export default function DesignerAdminPage() {
             </div>
 
             {/* Info */}
-            <div className="mt-6 text-slate-600 text-xs text-center">
+            <div className="mt-4 sm:mt-6 text-slate-600 text-xs text-center">
               آخرین بروزرسانی: {new Date(settings.lastUpdated).toLocaleDateString('fa-IR')} ساعت {new Date(settings.lastUpdated).toLocaleTimeString('fa-IR')}
             </div>
           </div>

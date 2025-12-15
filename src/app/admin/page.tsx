@@ -12,7 +12,7 @@ import ChatManager from '@/components/admin/ChatManager'
 import AboutManager from '@/components/admin/AboutManager'
 import ManagerManager from '@/components/admin/ManagerManager'
 import Dashboard from '@/components/admin/Dashboard'
-import LoginForm from '@/components/admin/LoginForm'
+import PanelSelector from '@/components/admin/PanelSelector'
 import { getUnreadMessagesCount } from '@/lib/contact'
 import { getTotalUnreadChats } from '@/lib/chat'
 import { isLoggedIn, logout, refreshSession } from '@/lib/auth'
@@ -98,9 +98,9 @@ export default function AdminPage() {
     )
   }
 
-  // Show login form if not authenticated
+  // Show panel selector if not authenticated
   if (!isAuthenticated) {
-    return <LoginForm role="admin" onSuccess={() => setIsAuthenticated(true)} />
+    return <PanelSelector onAdminLoginSuccess={() => setIsAuthenticated(true)} />
   }
 
   if (!settings) {

@@ -320,17 +320,6 @@ export default function AdminPage() {
 
             {/* Mobile Footer */}
             <div className="mt-6 pt-4 border-t border-slate-800 space-y-2">
-              <Link
-                href="/admin/designer"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 border border-purple-500/30"
-              >
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">A</span>
-                </div>
-                <span>{t.admin.designerAccess}</span>
-              </Link>
-              
               <button
                 onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-all duration-200"
@@ -378,23 +367,6 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
-
-          {/* Designer Access Button */}
-          <Link
-            href="/admin/designer"
-            className="flex items-center gap-3 px-4 py-3 mb-6 rounded-xl text-sm font-medium bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 border border-purple-500/30 hover:border-purple-500/50 hover:from-purple-500/20 hover:to-pink-500/20 transition-all duration-200"
-          >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-              <span className="text-white text-sm font-bold">A</span>
-            </div>
-            <div className="flex-1">
-              <span className="block">{t.admin.designerAccess}</span>
-              <span className="text-purple-400/60 text-xs">{t.admin.designerPanel}</span>
-            </div>
-            <svg className={`w-4 h-4 ${isRTL ? '' : 'rotate-180'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Link>
 
           {/* Navigation */}
           <nav className="flex-1 space-y-2">

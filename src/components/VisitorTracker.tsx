@@ -8,30 +8,21 @@ export default function VisitorTracker() {
     // Start tracking when component mounts
     startVisitorSession()
     
-    // Update exit time periodically
-    const interval = setInterval(() => {
-      endVisitorSession()
-    }, 30000) // Every 30 seconds
-    
-    // End session on page unload
+    // End session on page unload (multiple events for better reliability)
     const handleUnload = () => {
       endVisitorSession()
     }
     
-    // Handle visibility change (tab switch)
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        endVisitorSession()
-      }
-    }
-    
+    // Use multiple events for better reliability across different browsers
     window.addEventListener('beforeunload', handleUnload)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('unload', handleUnload)
+    window.addEventListener('pagehide', handleUnload)
     
     return () => {
-      clearInterval(interval)
       window.removeEventListener('beforeunload', handleUnload)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('unload', handleUnload)
+      window.removeEventListener('pagehide', handleUnload)
+      // End session when component unmounts (e.g., navigation)
       endVisitorSession()
     }
   }, [])

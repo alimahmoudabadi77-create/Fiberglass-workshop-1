@@ -287,11 +287,15 @@ function updateVisitorInList(visitor: VisitorInfo): void {
 export function endVisitorSession(): void {
   const visitor = getCurrentVisitor()
   
-  if (visitor) {
-    visitor.exitTime = new Date().toISOString()
+  if (visitor && !visitor.exitTime) {
+    // Use precise timestamp for exit time
+    const exitTimestamp = new Date().toISOString()
+    visitor.exitTime = exitTimestamp
+    
+    // Calculate duration precisely in seconds
     const entryTime = new Date(visitor.entryTime).getTime()
-    const exitTime = new Date(visitor.exitTime).getTime()
-    visitor.duration = Math.round((exitTime - entryTime) / 1000)
+    const exitTime = new Date(exitTimestamp).getTime()
+    visitor.duration = Math.floor((exitTime - entryTime) / 1000) // Use Math.floor for consistency
     
     saveCurrentVisitor(visitor)
     updateVisitorInList(visitor)

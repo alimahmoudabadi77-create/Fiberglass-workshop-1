@@ -12,6 +12,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
   const [stats, setStats] = useState<ReturnType<typeof getStats> | null>(null)
   const [selectedVisitor, setSelectedVisitor] = useState<VisitorInfo | null>(null)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
   const { t, language } = useAdminLanguage()
 
   useEffect(() => {
@@ -21,14 +22,20 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
     
     loadStats()
     
-    // Refresh stats every 5 seconds
+    // Refresh stats every 5 seconds for data updates
     const interval = setInterval(loadStats, 5000)
+    
+    // Refresh UI every second for real-time duration updates (for online visitors)
+    const realTimeInterval = setInterval(() => {
+      setRefreshKey(prev => prev + 1)
+    }, 1000)
     
     window.addEventListener('analyticsUpdated', loadStats)
     window.addEventListener('storage', loadStats)
     
     return () => {
       clearInterval(interval)
+      clearInterval(realTimeInterval)
       window.removeEventListener('analyticsUpdated', loadStats)
       window.removeEventListener('storage', loadStats)
     }
@@ -40,11 +47,28 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
     setStats(getStats())
   }
 
-  const formatDuration = (seconds: number | null): string => {
+  const formatDuration = (seconds: number | null, entryTime?: string): string => {
+    // If visitor is still online, calculate real-time duration
+    if (seconds === null && entryTime) {
+      const entry = new Date(entryTime).getTime()
+      const now = new Date().getTime()
+      const realTimeSeconds = Math.floor((now - entry) / 1000)
+      if (realTimeSeconds < 60) return `${realTimeSeconds} ${t.admin.dashboard.seconds}`
+      if (realTimeSeconds < 3600) return `${Math.floor(realTimeSeconds / 60)} ${t.admin.dashboard.minutes}`
+      return `${Math.floor(realTimeSeconds / 3600)} ${t.admin.dashboard.hours}`
+    }
+    
     if (seconds === null) return t.admin.dashboard.visiting
     if (seconds < 60) return `${seconds} ${t.admin.dashboard.seconds}`
     if (seconds < 3600) return `${Math.floor(seconds / 60)} ${t.admin.dashboard.minutes}`
     return `${Math.floor(seconds / 3600)} ${t.admin.dashboard.hours}`
+  }
+  
+  // Calculate real-time duration for online visitors
+  const getRealTimeDuration = (entryTime: string): number => {
+    const entry = new Date(entryTime).getTime()
+    const now = new Date().getTime()
+    return Math.floor((now - entry) / 1000)
   }
 
   const getLocale = (): string => {
@@ -313,7 +337,11 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="text-slate-400 text-sm">{formatDuration(visitor.duration)}</span>
+                      <span className="text-slate-400 text-sm">
+                        {visitor.exitTime 
+                          ? formatDuration(visitor.duration) 
+                          : formatDuration(null, visitor.entryTime)}
+                      </span>
                     </td>
                     <td className="py-3 px-4">
                       <span className="px-2 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs">
@@ -391,7 +419,11 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
                 </div>
                 <div className="bg-slate-800/50 rounded-xl p-4">
                   <p className="text-slate-500 text-xs mb-1">{t.admin.dashboard.visitDuration}</p>
-                  <p className="text-white">{formatDuration(selectedVisitor.duration)}</p>
+                  <p className="text-white">
+                    {selectedVisitor.exitTime 
+                      ? formatDuration(selectedVisitor.duration) 
+                      : formatDuration(null, selectedVisitor.entryTime)}
+                  </p>
                 </div>
               </div>
 

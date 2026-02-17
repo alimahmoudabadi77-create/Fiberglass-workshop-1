@@ -76,17 +76,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            
-            {/* Chat Button */}
-            <Link
-              href="/chat"
-              className="ml-2 flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium hover:from-blue-600 hover:to-cyan-600 shadow-lg shadow-blue-500/25 transition-all duration-300"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              {t.nav.messageUs}
-            </Link>
 
             {/* Language Switcher */}
             <div className="ml-2">
@@ -98,16 +87,6 @@ export default function Navbar() {
           <div className="flex md:hidden items-center gap-2">
             {/* Language Switcher - Mobile */}
             <LanguageSwitcher />
-
-            {/* Chat Button - Mobile (Always Visible) */}
-            <Link
-              href="/chat"
-              className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-            </Link>
             
             {/* Admin Button - Mobile (Always Visible) */}
             <Link
@@ -174,18 +153,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            
-            {/* Chat Button - Mobile */}
-            <Link
-              href="/chat"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              {t.nav.messageUs}
-            </Link>
           </div>
         </div>
       </div>

@@ -8,6 +8,8 @@ export interface VisitorInfo {
   os: string
   device: string
   entryTime: string
+  // آخرین زمان فعالیت کاربر (برای تشخیص آنلاین/آفلاین و محاسبه خروج)
+  lastSeen: string
   exitTime: string | null
   duration: number | null // in seconds
   pageViews: number
@@ -27,6 +29,13 @@ export interface DailyStats {
 const VISITORS_KEY = 'fiberglass_visitors'
 const CURRENT_VISITOR_KEY = 'fiberglass_current_visitor'
 const DAILY_STATS_KEY = 'fiberglass_daily_stats'
+
+// اگر کاربر بیش از این زمان فعالیت نکند، آفلاین محسوب می‌شود
+const ONLINE_THRESHOLD_MS = 60_000
+
+function nowIso(): string {
+  return new Date().toISOString()
+}
 
 // Generate unique visitor ID
 function generateVisitorId(): string {
@@ -183,15 +192,28 @@ export async function startVisitorSession(): Promise<VisitorInfo> {
   let visitor = getCurrentVisitor()
   
   if (visitor) {
-    // Update page view
-    visitor.pageViews++
-    if (!visitor.pages.includes(window.location.pathname)) {
-      visitor.pages.push(window.location.pathname)
+    // If session already ended or is stale, start a new session
+    const lastSeenMs = new Date(visitor.lastSeen || visitor.entryTime).getTime()
+    const isStale = visitor.exitTime !== null || (Date.now() - lastSeenMs > ONLINE_THRESHOLD_MS * 2)
+    if (isStale) {
+      try {
+        sessionStorage.removeItem(CURRENT_VISITOR_KEY)
+      } catch {
+        // ignore
+      }
+      visitor = null
+    } else {
+      // Update page view & lastSeen
+      visitor.pageViews++
+      if (!visitor.pages.includes(window.location.pathname)) {
+        visitor.pages.push(window.location.pathname)
+      }
+      visitor.lastSeen = nowIso()
+      saveCurrentVisitor(visitor)
+      updateVisitorInList(visitor)
+      updateDailyStats(visitor.id)
+      return visitor
     }
-    saveCurrentVisitor(visitor)
-    updateVisitorInList(visitor)
-    updateDailyStats(visitor.id)
-    return visitor
   }
   
   // Get IP address (using multiple free APIs as fallback)
@@ -241,6 +263,7 @@ export async function startVisitorSession(): Promise<VisitorInfo> {
   
   const ua = navigator.userAgent
   const { browser, os, device } = parseUserAgent(ua)
+  const entryTimeIso = nowIso()
   
   visitor = {
     id: generateVisitorId(),
@@ -249,7 +272,8 @@ export async function startVisitorSession(): Promise<VisitorInfo> {
     browser,
     os,
     device,
-    entryTime: new Date().toISOString(),
+    entryTime: entryTimeIso,
+    lastSeen: entryTimeIso,
     exitTime: null,
     duration: null,
     pageViews: 1,
@@ -289,8 +313,9 @@ export function endVisitorSession(): void {
   
   if (visitor && !visitor.exitTime) {
     // Use precise timestamp for exit time
-    const exitTimestamp = new Date().toISOString()
+    const exitTimestamp = nowIso()
     visitor.exitTime = exitTimestamp
+    visitor.lastSeen = exitTimestamp
     
     // Calculate duration precisely in seconds
     const entryTime = new Date(visitor.entryTime).getTime()
@@ -302,11 +327,61 @@ export function endVisitorSession(): void {
   }
 }
 
+// Heartbeat: فقط lastSeen را به‌روزرسانی می‌کند (برای دقیق شدن وضعیت آنلاین)
+export function heartbeatVisitorSession(): void {
+  const visitor = getCurrentVisitor()
+  if (!visitor || visitor.exitTime) return
+  visitor.lastSeen = nowIso()
+  saveCurrentVisitor(visitor)
+  updateVisitorInList(visitor)
+}
+
 // Get statistics
 export function getStats() {
   const visitors = getVisitors()
   const dailyStats = getDailyStats()
   const today = getTodayDate()
+  
+  // Normalize old/dirty data and compute exitTime for inactive visitors
+  const nowMs = Date.now()
+  let changed = false
+  for (const v of visitors) {
+    // Backfill lastSeen for old records
+    if (!v.lastSeen) {
+      v.lastSeen = v.exitTime || v.entryTime
+      changed = true
+    }
+    
+    // If we have duration but exitTime is missing, reconstruct exitTime
+    if (v.exitTime === null && v.duration !== null) {
+      const entryMs = new Date(v.entryTime).getTime()
+      v.exitTime = new Date(entryMs + v.duration * 1000).toISOString()
+      v.lastSeen = v.exitTime
+      changed = true
+      continue
+    }
+    
+    // If still marked online but inactive, set exitTime to lastSeen
+    const lastSeenMs = new Date(v.lastSeen).getTime()
+    if (v.exitTime === null && nowMs - lastSeenMs > ONLINE_THRESHOLD_MS) {
+      v.exitTime = new Date(lastSeenMs).toISOString()
+      const entryMs = new Date(v.entryTime).getTime()
+      v.duration = Math.max(0, Math.floor((lastSeenMs - entryMs) / 1000))
+      changed = true
+    }
+    
+    // If exitTime exists but duration missing, compute it
+    if (v.exitTime && v.duration === null) {
+      const entryMs = new Date(v.entryTime).getTime()
+      const exitMs = new Date(v.exitTime).getTime()
+      v.duration = Math.max(0, Math.floor((exitMs - entryMs) / 1000))
+      changed = true
+    }
+  }
+  
+  if (changed) {
+    saveVisitors(visitors)
+  }
   
   // Today's stats
   const todayStats = dailyStats.find(s => s.date === today) || {

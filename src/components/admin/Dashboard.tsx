@@ -12,7 +12,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
   const [stats, setStats] = useState<ReturnType<typeof getStats> | null>(null)
   const [selectedVisitor, setSelectedVisitor] = useState<VisitorInfo | null>(null)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [, forceTick] = useState(0)
   const { t, language } = useAdminLanguage()
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
     
     // Refresh UI every second for real-time duration updates (for online visitors)
     const realTimeInterval = setInterval(() => {
-      setRefreshKey(prev => prev + 1)
+      forceTick((prev) => prev + 1)
     }, 1000)
     
     window.addEventListener('analyticsUpdated', loadStats)
@@ -47,28 +47,25 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
     setStats(getStats())
   }
 
+  const formatDurationFromSeconds = (totalSeconds: number): string => {
+    const seconds = Math.max(0, Math.floor(totalSeconds))
+    const h = Math.floor(seconds / 3600)
+    const m = Math.floor((seconds % 3600) / 60)
+    const s = seconds % 60
+    
+    if (h > 0) return `${h} ${t.admin.dashboard.hours} ${m} ${t.admin.dashboard.minutes} ${s} ${t.admin.dashboard.seconds}`
+    if (m > 0) return `${m} ${t.admin.dashboard.minutes} ${s} ${t.admin.dashboard.seconds}`
+    return `${s} ${t.admin.dashboard.seconds}`
+  }
+
   const formatDuration = (seconds: number | null, entryTime?: string): string => {
-    // If visitor is still online, calculate real-time duration
     if (seconds === null && entryTime) {
       const entry = new Date(entryTime).getTime()
-      const now = new Date().getTime()
-      const realTimeSeconds = Math.floor((now - entry) / 1000)
-      if (realTimeSeconds < 60) return `${realTimeSeconds} ${t.admin.dashboard.seconds}`
-      if (realTimeSeconds < 3600) return `${Math.floor(realTimeSeconds / 60)} ${t.admin.dashboard.minutes}`
-      return `${Math.floor(realTimeSeconds / 3600)} ${t.admin.dashboard.hours}`
+      const now = Date.now()
+      return formatDurationFromSeconds((now - entry) / 1000)
     }
-    
     if (seconds === null) return t.admin.dashboard.visiting
-    if (seconds < 60) return `${seconds} ${t.admin.dashboard.seconds}`
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} ${t.admin.dashboard.minutes}`
-    return `${Math.floor(seconds / 3600)} ${t.admin.dashboard.hours}`
-  }
-  
-  // Calculate real-time duration for online visitors
-  const getRealTimeDuration = (entryTime: string): number => {
-    const entry = new Date(entryTime).getTime()
-    const now = new Date().getTime()
-    return Math.floor((now - entry) / 1000)
+    return formatDurationFromSeconds(seconds)
   }
 
   const getLocale = (): string => {
@@ -85,7 +82,7 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
 
   const formatTime = (isoString: string): string => {
     const date = new Date(isoString)
-    return date.toLocaleTimeString(getLocale(), { hour: '2-digit', minute: '2-digit' })
+    return date.toLocaleTimeString(getLocale(), { hour: '2-digit', minute: '2-digit', second: '2-digit' })
   }
 
   const formatDate = (isoString: string): string => {
@@ -202,32 +199,63 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
         {/* Weekly Chart */}
         <div className="lg:col-span-2 bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-800 p-6">
           <h3 className="text-lg font-semibold text-white mb-4">{t.admin.dashboard.weeklyChart}</h3>
-          <div className="flex items-end gap-2 h-40">
-            {stats.dailyStats.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center text-slate-500 text-sm">
-                {t.admin.dashboard.noData}
-              </div>
-            ) : (
-              stats.dailyStats.map((day, index) => {
-                const maxVisitors = Math.max(...stats.dailyStats.map(d => d.visitors), 1)
-                const height = (day.visitors / maxVisitors) * 100
-                return (
-                  <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                    <div className="w-full flex flex-col items-center">
-                      <span className="text-xs text-slate-400 mb-1">{day.visitors}</span>
-                      <div 
-                        className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-500"
-                        style={{ height: `${Math.max(height, 5)}%`, minHeight: '8px' }}
-                      />
-                    </div>
-                    <span className="text-xs text-slate-500">
-                      {new Date(day.date).toLocaleDateString(getLocale(), { day: 'numeric' })}
-                    </span>
+          {stats.dailyStats.length === 0 ? (
+            <div className="h-40 flex items-center justify-center text-slate-500 text-sm">
+              {t.admin.dashboard.noData}
+            </div>
+          ) : (
+            (() => {
+              // Ensure chronological order (oldest -> newest)
+              const data = [...stats.dailyStats].reverse()
+              const maxVisitors = Math.max(...data.map(d => d.visitors), 1)
+              const n = data.length
+              const points = data
+                .map((d, i) => {
+                  const x = n === 1 ? 50 : (i / (n - 1)) * 100
+                  const y = 100 - (d.visitors / maxVisitors) * 90 - 5 // padding
+                  return `${x.toFixed(2)},${y.toFixed(2)}`
+                })
+                .join(' ')
+              
+              return (
+                <div>
+                  <div className="h-40 w-full">
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-40">
+                      <defs>
+                        <linearGradient id="visitorsLine" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor="#60a5fa" />
+                          <stop offset="100%" stopColor="#3b82f6" />
+                        </linearGradient>
+                      </defs>
+                      
+                      {/* grid */}
+                      <path d="M0 95 H100" stroke="rgba(148,163,184,0.15)" strokeWidth="1" />
+                      <path d="M0 65 H100" stroke="rgba(148,163,184,0.08)" strokeWidth="1" />
+                      <path d="M0 35 H100" stroke="rgba(148,163,184,0.08)" strokeWidth="1" />
+                      
+                      {/* line */}
+                      <polyline points={points} fill="none" stroke="url(#visitorsLine)" strokeWidth="2" />
+                      
+                      {/* dots */}
+                      {data.map((d, i) => {
+                        const x = n === 1 ? 50 : (i / (n - 1)) * 100
+                        const y = 100 - (d.visitors / maxVisitors) * 90 - 5
+                        return <circle key={d.date} cx={x} cy={y} r="1.8" fill="#60a5fa" />
+                      })}
+                    </svg>
                   </div>
-                )
-              })
-            )}
-          </div>
+                  
+                  <div className="mt-2 flex justify-between text-xs text-slate-500">
+                    {data.map((d) => (
+                      <span key={d.date}>
+                        {new Date(d.date).toLocaleDateString(getLocale(), { day: 'numeric' })}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )
+            })()
+          )}
         </div>
 
         {/* Device & Browser Stats */}
@@ -241,12 +269,12 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
             ) : (
               Object.entries(stats.deviceStats).map(([device, count]) => {
                 const total = Object.values(stats.deviceStats).reduce((a, b) => a + b, 0)
-                const percentage = Math.round((count / total) * 100)
+                const percentage = total ? Math.round((count / total) * 1000) / 10 : 0
                 return (
                   <div key={device}>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-slate-300">{device}</span>
-                      <span className="text-slate-500">{percentage}%</span>
+                      <span className="text-slate-500">{percentage}% ({count})</span>
                     </div>
                     <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                       <div 
@@ -269,12 +297,12 @@ export default function Dashboard({ showClearButton = false }: DashboardProps) {
             ) : (
               Object.entries(stats.browserStats).map(([browser, count]) => {
                 const total = Object.values(stats.browserStats).reduce((a, b) => a + b, 0)
-                const percentage = Math.round((count / total) * 100)
+                const percentage = total ? Math.round((count / total) * 1000) / 10 : 0
                 return (
                   <div key={browser}>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-slate-300">{browser}</span>
-                      <span className="text-slate-500">{percentage}%</span>
+                      <span className="text-slate-500">{percentage}% ({count})</span>
                     </div>
                     <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                       <div 

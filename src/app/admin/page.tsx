@@ -7,23 +7,17 @@ import GalleryManager from '@/components/admin/GalleryManager'
 import TeamManager from '@/components/admin/TeamManager'
 import WelcomeBanner from '@/components/admin/WelcomeBanner'
 import ContactManager from '@/components/admin/ContactManager'
-import MessagesManager from '@/components/admin/MessagesManager'
-import ChatManager from '@/components/admin/ChatManager'
 import AboutManager from '@/components/admin/AboutManager'
 import ManagerManager from '@/components/admin/ManagerManager'
 import Dashboard from '@/components/admin/Dashboard'
 import PanelSelector from '@/components/admin/PanelSelector'
-import { getUnreadMessagesCount } from '@/lib/contact'
-import { getTotalUnreadChats } from '@/lib/chat'
 import { isLoggedIn, logout, refreshSession } from '@/lib/auth'
 import { useAdminLanguage } from '@/lib/AdminLanguageContext'
 
 export default function AdminPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [showSaveSuccess, setShowSaveSuccess] = useState(false)
-  const [activeSection, setActiveSection] = useState<'home' | 'gallery' | 'team' | 'contact' | 'messages' | 'chat' | 'dashboard' | 'about' | 'manager'>('home')
-  const [unreadMessages, setUnreadMessages] = useState(0)
-  const [unreadChats, setUnreadChats] = useState(0)
+  const [activeSection, setActiveSection] = useState<'home' | 'gallery' | 'team' | 'contact' | 'dashboard' | 'about' | 'manager'>('home')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -39,13 +33,6 @@ export default function AdminPage() {
       const currentSettings = getSettings()
       setSettings(currentSettings)
       
-      // Update unread messages count
-      const updateUnread = () => {
-        setUnreadMessages(getUnreadMessagesCount())
-        setUnreadChats(getTotalUnreadChats())
-      }
-      updateUnread()
-      
       // تمدید session هنگام فعالیت کاربر
       const handleActivity = () => {
         refreshSession('admin')
@@ -58,22 +45,14 @@ export default function AdminPage() {
         }
       }
       
-      window.addEventListener('messagesUpdated', updateUnread)
-      window.addEventListener('chatsUpdated', updateUnread)
-      window.addEventListener('storage', updateUnread)
       window.addEventListener('click', handleActivity)
       window.addEventListener('keydown', handleActivity)
       
-      const interval = setInterval(updateUnread, 1000)
       const authCheckInterval = setInterval(checkAuth, 60000) // هر دقیقه بررسی کن
       
       return () => {
-        window.removeEventListener('messagesUpdated', updateUnread)
-        window.removeEventListener('chatsUpdated', updateUnread)
-        window.removeEventListener('storage', updateUnread)
         window.removeEventListener('click', handleActivity)
         window.removeEventListener('keydown', handleActivity)
-        clearInterval(interval)
         clearInterval(authCheckInterval)
       }
     }
@@ -262,48 +241,6 @@ export default function AdminPage() {
               </button>
 
               <button
-                onClick={() => handleSectionChange('messages')}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  activeSection === 'messages'
-                    ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                  </svg>
-                  {t.admin.sidebar.messages}
-                </div>
-                {unreadMessages > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-xs font-bold">
-                    {unreadMessages}
-                  </span>
-                )}
-              </button>
-
-              <button
-                onClick={() => handleSectionChange('chat')}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  activeSection === 'chat'
-                    ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                  {t.admin.sidebar.chats}
-                </div>
-                {unreadChats > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-green-500 text-white text-xs font-bold animate-pulse">
-                    {unreadChats}
-                  </span>
-                )}
-              </button>
-
-              <button
                 onClick={() => handleSectionChange('dashboard')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                   activeSection === 'dashboard'
@@ -455,48 +392,6 @@ export default function AdminPage() {
             </button>
 
             <button
-              onClick={() => setActiveSection('messages')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                activeSection === 'messages'
-                  ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                </svg>
-                {t.admin.sidebar.messages}
-              </div>
-              {unreadMessages > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-xs font-bold">
-                  {unreadMessages}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={() => setActiveSection('chat')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                activeSection === 'chat'
-                  ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                {t.admin.sidebar.chats}
-              </div>
-              {unreadChats > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-green-500 text-white text-xs font-bold animate-pulse">
-                  {unreadChats}
-                </span>
-              )}
-            </button>
-
-            <button
               onClick={() => setActiveSection('dashboard')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeSection === 'dashboard'
@@ -548,10 +443,6 @@ export default function AdminPage() {
             <TeamManager />
           ) : activeSection === 'contact' ? (
             <ContactManager />
-          ) : activeSection === 'messages' ? (
-            <MessagesManager />
-          ) : activeSection === 'chat' ? (
-            <ChatManager />
           ) : (
             <Dashboard />
           )}

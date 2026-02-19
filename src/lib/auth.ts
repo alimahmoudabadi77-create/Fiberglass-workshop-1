@@ -267,9 +267,7 @@ export function refreshSession(role: 'admin' | 'designer'): void {
       // ignore
     }
   }
-}
-
-// ریست کردن کاربران به پیش‌فرض
+}// ریست کردن کاربران به پیش‌فرض
 export function resetUsersToDefault(): void {
   if (typeof window === 'undefined') return
   localStorage.setItem(USERS_KEY, JSON.stringify(DEFAULT_USERS))

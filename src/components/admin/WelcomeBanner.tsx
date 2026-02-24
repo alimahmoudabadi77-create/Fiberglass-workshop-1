@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { getSettings } from '@/lib/settings'
-import { useLanguage } from '@/lib/LanguageContext'
+import { useAdminLanguage } from '@/lib/AdminLanguageContext'
 
 export default function WelcomeBanner() {
   const [isVisible, setIsVisible] = useState(false)
   const [currentTime, setCurrentTime] = useState('')
   const [greeting, setGreeting] = useState('')
   const [isSiteActive, setIsSiteActive] = useState(true)
-  const { t, language } = useLanguage()
+  const { t, language } = useAdminLanguage()
 
   useEffect(() => {
     setIsVisible(true)

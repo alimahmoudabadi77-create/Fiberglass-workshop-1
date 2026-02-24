@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { getGalleryItems, GalleryItem } from '@/lib/gallery'
+import { getGalleryItemsAsync, GalleryItem } from '@/lib/gallery'
 import { useLanguage } from '@/lib/LanguageContext'
 
 export default function Gallery() {
@@ -11,8 +11,8 @@ export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null)
   const { t } = useLanguage()
 
-  const loadItems = useCallback(() => {
-    const galleryItems = getGalleryItems()
+  const loadItems = useCallback(async () => {
+    const galleryItems = await getGalleryItemsAsync()
     setItems(galleryItems)
   }, [])
 
@@ -34,10 +34,8 @@ export default function Gallery() {
   }, [])
 
   useEffect(() => {
-    // Load gallery items immediately
     loadItems()
 
-    // Listen for storage changes (cross-tab)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'fiberglass_gallery') {
         loadItems()
@@ -45,8 +43,7 @@ export default function Gallery() {
     }
     window.addEventListener('storage', handleStorageChange)
 
-    // Check for updates every 500ms (same-tab updates)
-    const interval = setInterval(loadItems, 500)
+    const interval = setInterval(loadItems, 3000)
 
     return () => {
       window.removeEventListener('storage', handleStorageChange)

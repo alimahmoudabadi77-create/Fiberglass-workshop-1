@@ -3,6 +3,12 @@ export type Language = 'en' | 'de' | 'fa' | 'ru' | 'fr' | 'ar'
 export const translations = {
   en: {
     // Navbar
+    // Workshop Info (labels only - data stays in component)
+    workshopInfo: {
+      workshopName: 'Workshop Name',
+      workshopId: 'Workshop ID',
+      manager: 'Workshop Manager',
+    },
     nav: {
       home: 'Home',
       about: 'About Us',
@@ -201,6 +207,11 @@ export const translations = {
       phone: 'Phone',
       email: 'Email',
       address: 'Address',
+      invitationTitle: 'Invitation to Collaborate',
+      invitationP1: 'This workshop leverages expertise, experience, and suitable equipment in the design, manufacturing, and execution of various fiberglass and metalwork projects, and is ready to collaborate with individuals and legal entities. Our goal is to provide high-quality services, desirable durability, and precise execution in accordance with technical standards and client needs.',
+      invitationP2: 'We are committed to completing all project stages with precision, organization, and full responsibility, considering customer satisfaction as our top priority.',
+      invitationP3: 'If you wish to collaborate and receive consultation, please contact us through the contact information provided on this website so that the necessary coordination for project review and execution can be arranged.',
+      invitationP4: 'We hope that an effective and long-term collaboration opportunity with you will be established.',
       formTitle: 'Quick Contact Form',
       form: {
         name: 'Full Name',
@@ -424,6 +435,11 @@ export const translations = {
   },
   
   de: {
+    workshopInfo: {
+      workshopName: 'Werkstattname',
+      workshopId: 'Werkstatt-ID',
+      manager: 'Werkstattleiter',
+    },
     // Navbar
     nav: {
       home: 'Startseite',
@@ -623,6 +639,11 @@ export const translations = {
       phone: 'Telefon',
       email: 'E-Mail',
       address: 'Adresse',
+      invitationTitle: 'Einladung zur Zusammenarbeit',
+      invitationP1: 'Diese Werkstatt nutzt Fachwissen, Erfahrung und geeignete Ausrüstung bei Design, Fertigung und Ausführung verschiedener Fiberglas- und Metallbearbeitungsprojekte und ist bereit, mit Einzelpersonen und juristischen Personen zusammenzuarbeiten. Unser Ziel ist die Bereitstellung hochwertiger Dienstleistungen, angemessener Haltbarkeit und präziser Ausführung gemäß technischen Standards und Kundenanforderungen.',
+      invitationP2: 'Wir verpflichten uns, alle Projektphasen mit Präzision, Organisation und voller Verantwortung abzuschließen und die Kundenzufriedenheit als unsere oberste Priorität zu betrachten.',
+      invitationP3: 'Bei Interesse an einer Zusammenarbeit und Beratung kontaktieren Sie uns bitte über die auf dieser Website angegebenen Kontaktinformationen, damit die erforderliche Koordination für Projektprüfung und -ausführung erfolgen kann.',
+      invitationP4: 'Wir hoffen, dass sich eine effektive und langfristige Zusammenarbeitsmöglichkeit mit Ihnen ergibt.',
       formTitle: 'Schnell-Kontaktformular',
       form: {
         name: 'Vollständiger Name',
@@ -846,6 +867,11 @@ export const translations = {
   },
 
   fa: {
+    workshopInfo: {
+      workshopName: 'نام کارگاه',
+      workshopId: 'شماره شناسه کارگاه',
+      manager: 'مدیر کارگاه',
+    },
     // Navbar
     nav: {
       home: 'خانه',
@@ -1045,6 +1071,11 @@ export const translations = {
       phone: 'تلفن تماس',
       email: 'ایمیل',
       address: 'آدرس',
+      invitationTitle: 'دعوت به همکاری',
+      invitationP1: 'این مجموعه با بهره‌گیری از تخصص، تجربه و تجهیزات مناسب در زمینه طراحی، ساخت و اجرای انواع پروژه‌های فایبرگلاس و فلزکاری آمادگی همکاری با اشخاص حقیقی و حقوقی را دارد. هدف ما ارائه خدماتی با کیفیت بالا، دوام مطلوب و اجرای دقیق مطابق با استانداردهای فنی و نیاز کارفرما می‌باشد.',
+      invitationP2: 'ما متعهد هستیم کلیه مراحل انجام پروژه را با دقت، نظم و مسئولیت‌پذیری کامل به انجام رسانده و رضایت مشتریان را به عنوان اولویت اصلی خود در نظر بگیریم.',
+      invitationP3: 'در صورت تمایل به همکاری و دریافت مشاوره، لطفاً از طریق راه‌های ارتباطی درج‌شده در این وب‌سایت با ما تماس حاصل فرمایید تا هماهنگی‌های لازم جهت بررسی و اجرای پروژه انجام پذیرد.',
+      invitationP4: 'امید است فرصت همکاری مؤثر و بلندمدتی با شما فراهم گردد.',
       formTitle: 'فرم تماس سریع',
       form: {
         name: 'نام و نام خانوادگی',
@@ -1269,6 +1300,11 @@ export const translations = {
 
   // Russian (Русский)
   ru: {
+    workshopInfo: {
+      workshopName: 'Название мастерской',
+      workshopId: 'ID мастерской',
+      manager: 'Руководитель',
+    },
     // Navbar
     nav: {
       home: 'Главная',
@@ -1468,6 +1504,11 @@ export const translations = {
       phone: 'Телефон',
       email: 'Эл. почта',
       address: 'Адрес',
+      invitationTitle: 'Приглашение к сотрудничеству',
+      invitationP1: 'Эта мастерская, используя опыт, знания и подходящее оборудование в области проектирования, изготовления и выполнения различных проектов из стеклопластика и металлообработки, готова к сотрудничеству с физическими и юридическими лицами. Наша цель - предоставление услуг высокого качества, надлежащей долговечности и точного выполнения в соответствии с техническими стандартами и потребностями заказчика.',
+      invitationP2: 'Мы обязуемся выполнять все этапы проекта с точностью, организованностью и полной ответственностью, считая удовлетворенность клиентов нашим главным приоритетом.',
+      invitationP3: 'Если вы желаете сотрудничать и получить консультацию, пожалуйста, свяжитесь с нами через контактную информацию, указанную на этом сайте, чтобы можно было провести необходимую координацию по проверке и выполнению проекта.',
+      invitationP4: 'Мы надеемся, что будет создана эффективная и долгосрочная возможность сотрудничества с вами.',
       formTitle: 'Форма быстрой связи',
       form: {
         name: 'Полное имя',
@@ -1690,6 +1731,11 @@ export const translations = {
 
   // French (Français)
   fr: {
+    workshopInfo: {
+      workshopName: 'Nom de l\'atelier',
+      workshopId: 'ID de l\'atelier',
+      manager: 'Directeur',
+    },
     // Navbar
     nav: {
       home: 'Accueil',
@@ -1889,6 +1935,11 @@ export const translations = {
       phone: 'Téléphone',
       email: 'E-mail',
       address: 'Adresse',
+      invitationTitle: 'Invitation à collaborer',
+      invitationP1: 'Cet atelier, grâce à son expertise, son expérience et son équipement adapté dans la conception, la fabrication et l\'exécution de divers projets en fibre de verre et métallurgie, est prêt à collaborer avec des personnes physiques et morales. Notre objectif est de fournir des services de haute qualité, une durabilité optimale et une exécution précise conformément aux normes techniques et aux besoins du client.',
+      invitationP2: 'Nous nous engageons à réaliser toutes les étapes du projet avec précision, organisation et pleine responsabilité, en considérant la satisfaction client comme notre priorité absolue.',
+      invitationP3: 'Si vous souhaitez collaborer et recevoir une consultation, veuillez nous contacter via les coordonnées indiquées sur ce site afin que la coordination nécessaire pour l\'examen et l\'exécution du projet puisse être effectuée.',
+      invitationP4: 'Nous espérons qu\'une opportunité de collaboration efficace et durable avec vous sera établie.',
       formTitle: 'Formulaire de contact rapide',
       form: {
         name: 'Nom complet',
@@ -2111,6 +2162,11 @@ export const translations = {
 
   // Arabic (العربية)
   ar: {
+    workshopInfo: {
+      workshopName: 'اسم الورشة',
+      workshopId: 'رقم هوية الورشة',
+      manager: 'مدير الورشة',
+    },
     // Navbar
     nav: {
       home: 'الرئيسية',
@@ -2310,6 +2366,11 @@ export const translations = {
       phone: 'الهاتف',
       email: 'البريد الإلكتروني',
       address: 'العنوان',
+      invitationTitle: 'دعوة للتعاون',
+      invitationP1: 'تستفيد هذه الورشة من الخبرة والتجربة والمعدات المناسبة في التصميم والتصنيع والتنفيذ لمختلف مشاريع الألياف الزجاجية والأعمال المعدنية، وهي جاهزة للتعاون مع الأفراد والكيانات القانونية. هدفنا تقديم خدمات عالية الجودة ومتانة مناسبة وتنفيذ دقيق وفقًا للمعايير الفنية واحتياجات العميل.',
+      invitationP2: 'نحن ملتزمون بإكمال جميع مراحل المشروع بدقة وتنظيم ومسؤولية كاملة، مع اعتبار رضا العملاء أولويتنا الأساسية.',
+      invitationP3: 'إذا رغبت في التعاون والحصول على استشارة، يرجى الاتصال بنا عبر معلومات الاتصال المذكورة في هذا الموقع حتى يمكن ترتيب التنسيق اللازم لمراجعة وتنفيذ المشروع.',
+      invitationP4: 'نأمل أن تتاح فرصة تعاون فعالة وطويلة الأمد معكم.',
       formTitle: 'نموذج الاتصال السريع',
       form: {
         name: 'الاسم الكامل',

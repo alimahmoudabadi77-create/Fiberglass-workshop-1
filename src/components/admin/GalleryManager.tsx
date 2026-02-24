@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { 
-  getGalleryItems, 
-  addGalleryItem, 
-  updateGalleryItem, 
-  deleteGalleryItem,
-  GalleryItem 
+  getGalleryItemsAsync, 
+  addGalleryItemAsync, 
+  updateGalleryItemAsync, 
+  deleteGalleryItemAsync,
+  GalleryItem,
+  isSupabaseConfigured 
 } from '@/lib/gallery'
 import { useAdminLanguage } from '@/lib/AdminLanguageContext'
 
@@ -29,8 +30,8 @@ export default function GalleryManager() {
     loadItems()
   }, [])
 
-  const loadItems = () => {
-    const galleryItems = getGalleryItems()
+  const loadItems = async () => {
+    const galleryItems = await getGalleryItemsAsync()
     setItems(galleryItems)
   }
 
@@ -39,38 +40,42 @@ export default function GalleryManager() {
     if (!files || files.length === 0) return
 
     setIsUploading(true)
+    let added = 0
+    const useSupabase = isSupabaseConfigured()
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      
-      // Check file type
       const isImage = file.type.startsWith('image/')
       const isVideo = file.type.startsWith('video/')
-      
-      if (!isImage && !isVideo) {
-        continue // Skip non-media files
+      if (!isImage && !isVideo) continue
+
+      if (useSupabase) {
+        const result = await addGalleryItemAsync(
+          {
+            type: isImage ? 'image' : 'video',
+            url: '',
+            title: file.name.replace(/\.[^/.]+$/, ''),
+            description: '',
+          },
+          file
+        )
+        if (result) added++
+      } else {
+        const base64 = await fileToBase64(file)
+        const result = await addGalleryItemAsync({
+          type: isImage ? 'image' : 'video',
+          url: base64,
+          title: file.name.replace(/\.[^/.]+$/, ''),
+          description: '',
+        })
+        if (result) added++
       }
-
-      // Convert to base64
-      const base64 = await fileToBase64(file)
-      
-      // Add to gallery
-      addGalleryItem({
-        type: isImage ? 'image' : 'video',
-        url: base64,
-        title: file.name.replace(/\.[^/.]+$/, ''), // Remove extension
-        description: '',
-      })
     }
 
-    loadItems()
+    await loadItems()
     setIsUploading(false)
-    showSuccessMessage(`${files.length} ${t.admin.gallery.filesAdded}`)
-    
-    // Reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+    showSuccessMessage(`${added} ${t.admin.gallery.filesAdded}`)
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const fileToBase64 = (file: File): Promise<string> => {
@@ -82,21 +87,20 @@ export default function GalleryManager() {
     })
   }
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (!editingItem) return
-
-    updateGalleryItem(editingItem.id, {
+    await updateGalleryItemAsync(editingItem.id, {
       title: editForm.title,
       description: editForm.description,
     })
-    loadItems()
+    await loadItems()
     setEditingItem(null)
     showSuccessMessage(t.admin.gallery.itemEdited)
   }
 
-  const handleDelete = (id: string) => {
-    deleteGalleryItem(id)
-    loadItems()
+  const handleDelete = async (id: string) => {
+    await deleteGalleryItemAsync(id)
+    await loadItems()
     setShowDeleteConfirm(null)
     showSuccessMessage(t.admin.gallery.itemDeleted)
   }

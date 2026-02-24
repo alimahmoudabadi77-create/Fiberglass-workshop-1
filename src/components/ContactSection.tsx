@@ -1,10 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { getContactInfo, ContactInfo, addContactMessage } from '@/lib/contact'
+import { getContactInfo, ContactInfo } from '@/lib/contact'
 import { useLanguage } from '@/lib/LanguageContext'
 
-// مقادیر پیش‌فرض
 const DEFAULT_CONTACT: ContactInfo = {
   phone1: '۰۲۱-۱۲۳۴۵۶۷۸',
   phone2: '۰۹۱۲-۱۲۳-۴۵۶۷',
@@ -20,16 +19,6 @@ export default function ContactSection() {
   const [isLoaded, setIsLoaded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const { t } = useLanguage()
-  
-  // Form state
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    subject: '',
-    message: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -81,40 +70,6 @@ export default function ContactSection() {
       clearInterval(interval)
     }
   }, [])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // اعتبارسنجی
-    if (!formData.name || !formData.phone || !formData.subject || !formData.message) {
-      return
-    }
-    
-    setIsSubmitting(true)
-    
-    try {
-      // ذخیره پیام
-      addContactMessage({
-        name: formData.name,
-        phone: formData.phone,
-        subject: formData.subject,
-        message: formData.message,
-      })
-      
-      // ریست فرم
-      setFormData({ name: '', phone: '', subject: '', message: '' })
-      setSubmitStatus('success')
-      
-      // مخفی کردن پیام موفقیت بعد از 5 ثانیه
-      setTimeout(() => setSubmitStatus('idle'), 5000)
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setSubmitStatus('error')
-      setTimeout(() => setSubmitStatus('idle'), 5000)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   const contactInfo = [
     {
@@ -190,104 +145,26 @@ export default function ContactSection() {
           ))}
         </div>
 
-        {/* Contact Form */}
-        <div className={`max-w-2xl mx-auto transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 animated-border">
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">{t.contact.formTitle}</h3>
-            
-            {/* Success/Error Messages */}
-            {submitStatus === 'success' && (
-              <div className="mb-6 p-4 rounded-xl bg-green-500/20 border border-green-500/30 text-green-400 text-center">
-                <div className="flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        {/* دعوت به همکاری */}
+        <div className={`max-w-4xl mx-auto transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-slate-900/60 backdrop-blur-xl border border-slate-700/60 shadow-xl shadow-green-500/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-blue-500/5 pointer-events-none" />
+            <div className="relative p-6 sm:p-8 lg:p-12">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 flex items-center justify-center">
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
-                  {t.contact.form.success}
                 </div>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{t.contact.invitationTitle}</h3>
               </div>
-            )}
-            
-            {submitStatus === 'error' && (
-              <div className="mb-6 p-4 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-center">
-                <div className="flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  {t.contact.form.error}
-                </div>
+              <div className="space-y-4 sm:space-y-5 text-gray-300 leading-relaxed text-sm sm:text-base">
+                <p>{t.contact.invitationP1}</p>
+                <p>{t.contact.invitationP2}</p>
+                <p>{t.contact.invitationP3}</p>
+                <p className="text-green-400/90 font-medium">{t.contact.invitationP4}</p>
               </div>
-            )}
-            
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-                <div>
-                  <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.name}</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 text-sm sm:text-base"
-                    placeholder={t.contact.form.namePlaceholder}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.phone}</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 text-sm sm:text-base"
-                    placeholder={t.contact.form.phonePlaceholder}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.subject}</label>
-                <input
-                  type="text"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 text-sm sm:text-base"
-                  placeholder={t.contact.form.subjectPlaceholder}
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-gray-400 text-xs sm:text-sm mb-1.5 sm:mb-2">{t.contact.form.message}</label>
-                <textarea
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:border-green-500 focus:outline-none transition-colors duration-300 resize-none text-sm sm:text-base"
-                  placeholder={t.contact.form.messagePlaceholder}
-                  required
-                />
-              </div>
-              
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 sm:py-4 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 sm:w-5 h-4 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    {t.contact.form.submitting}
-                  </>
-                ) : (
-                  <>
-                    {t.contact.form.submit}
-                    <svg className="w-4 sm:w-5 h-4 sm:h-5 group-hover:-translate-x-1 rtl:group-hover:translate-x-1 rtl:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </>
-                )}
-              </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>

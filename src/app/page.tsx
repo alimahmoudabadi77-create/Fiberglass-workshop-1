@@ -5,6 +5,7 @@ import { getSettings, SiteSettings } from '@/lib/settings'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import HeroSection from '@/components/HeroSection'
+import WorkshopInfo from '@/components/WorkshopInfo'
 import ServicesPreview from '@/components/ServicesPreview'
 import AboutSection from '@/components/AboutSection'
 import FiberglassInfo from '@/components/FiberglassInfo'
@@ -71,6 +72,7 @@ export default function Home() {
       <DateTimeClock />
       <main>
         <HeroSection />
+        <WorkshopInfo />
         <AboutSection />
         <FiberglassInfo />
         <ServicesPreview />

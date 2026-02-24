@@ -3,12 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
 
-const WORKSHOP_DATA = {
-  name: 'کارگاه فایبرگلاس و فلزکاری',
-  subtitle: 'ساخت مخازن بازیافت فلزی',
-  workshopId: '4703630742',
-  manager: 'محمد علی غارسی',
-}
+const WORKSHOP_ID = '4703630742'
 
 export default function WorkshopInfo() {
   const [isVisible, setIsVisible] = useState(false)
@@ -44,8 +39,8 @@ export default function WorkshopInfo() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs sm:text-sm text-gray-500 font-medium mb-0.5">{t.workshopInfo.workshopName}</p>
-                  <p className="text-white font-bold text-sm sm:text-base md:text-lg break-words">{WORKSHOP_DATA.name}</p>
-                  <p className="text-gray-400 text-xs sm:text-sm mt-0.5 break-words">{WORKSHOP_DATA.subtitle}</p>
+                  <p className="text-white font-bold text-sm sm:text-base md:text-lg break-words">{t.workshopInfo.nameValue}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mt-0.5 break-words">{t.workshopInfo.subtitleValue}</p>
                 </div>
               </div>
 
@@ -62,7 +57,7 @@ export default function WorkshopInfo() {
                 <div className="min-w-0">
                   <p className="text-xs sm:text-sm text-gray-500 font-medium mb-0.5">{t.workshopInfo.workshopId}</p>
                   <p className="text-green-400 font-semibold text-sm sm:text-base md:text-lg" style={{ direction: 'ltr' }}>
-                    {WORKSHOP_DATA.workshopId}
+                    {WORKSHOP_ID}
                   </p>
                 </div>
               </div>
@@ -78,7 +73,7 @@ export default function WorkshopInfo() {
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs sm:text-sm text-gray-500 font-medium mb-0.5">{t.workshopInfo.manager}</p>
-                  <p className="text-white font-semibold text-sm sm:text-base md:text-lg break-words">{WORKSHOP_DATA.manager}</p>
+                  <p className="text-white font-semibold text-sm sm:text-base md:text-lg break-words">{t.workshopInfo.managerNameValue}</p>
                 </div>
               </div>
             </div>

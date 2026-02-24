@@ -8,6 +8,9 @@ export const translations = {
       workshopName: 'Workshop Name',
       workshopId: 'Workshop ID',
       manager: 'Workshop Manager',
+      nameValue: 'Fiberglass and Metalwork Workshop',
+      subtitleValue: 'Metal recycling tank manufacturing',
+      managerNameValue: 'Mohammad Ali Gharsi',
     },
     nav: {
       home: 'Home',
@@ -439,6 +442,9 @@ export const translations = {
       workshopName: 'Werkstattname',
       workshopId: 'Werkstatt-ID',
       manager: 'Werkstattleiter',
+      nameValue: 'Fiberglas- und Metallwerkstatt',
+      subtitleValue: 'Herstellung von Metall-Recyclingtanks',
+      managerNameValue: 'Mohammad Ali Gharsi',
     },
     // Navbar
     nav: {
@@ -871,6 +877,9 @@ export const translations = {
       workshopName: 'نام کارگاه',
       workshopId: 'شماره شناسه کارگاه',
       manager: 'مدیر کارگاه',
+      nameValue: 'کارگاه فایبرگلاس و فلزکاری',
+      subtitleValue: 'ساخت مخازن بازیافت فلزی',
+      managerNameValue: 'محمد علی غارسی',
     },
     // Navbar
     nav: {
@@ -1304,6 +1313,9 @@ export const translations = {
       workshopName: 'Название мастерской',
       workshopId: 'ID мастерской',
       manager: 'Руководитель',
+      nameValue: 'Мастерская стеклопластика и металлообработки',
+      subtitleValue: 'Производство металлических резервуаров для переработки',
+      managerNameValue: 'Мохаммад Али Гарси',
     },
     // Navbar
     nav: {
@@ -1735,6 +1747,9 @@ export const translations = {
       workshopName: 'Nom de l\'atelier',
       workshopId: 'ID de l\'atelier',
       manager: 'Directeur',
+      nameValue: 'Atelier de fibre de verre et métallurgie',
+      subtitleValue: 'Fabrication de réservoirs de recyclage métalliques',
+      managerNameValue: 'Mohammad Ali Gharsi',
     },
     // Navbar
     nav: {
@@ -2166,6 +2181,9 @@ export const translations = {
       workshopName: 'اسم الورشة',
       workshopId: 'رقم هوية الورشة',
       manager: 'مدير الورشة',
+      nameValue: 'ورشة الألياف الزجاجية والأعمال المعدنية',
+      subtitleValue: 'تصنيع خزانات إعادة تدوير المعادن',
+      managerNameValue: 'محمد علي غارسي',
     },
     // Navbar
     nav: {

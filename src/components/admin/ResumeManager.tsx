@@ -21,6 +21,7 @@ export default function ResumeManager() {
     description: '',
     tags: [],
     color: 'from-purple-500 to-pink-600',
+    url: '',
   })
   const [newTag, setNewTag] = useState('')
   const [editingPortfolio, setEditingPortfolio] = useState<PortfolioItem | null>(null)
@@ -113,7 +114,7 @@ export default function ResumeManager() {
         portfolio: [...resume.portfolio, { ...newPortfolio, id: Date.now().toString() }],
       })
     }
-    setNewPortfolio({ id: '', title: '', description: '', tags: [], color: 'from-purple-500 to-pink-600' })
+    setNewPortfolio({ id: '', title: '', description: '', tags: [], color: 'from-purple-500 to-pink-600', url: '' })
     setEditingPortfolio(null)
     setShowPortfolioModal(false)
   }
@@ -280,6 +281,17 @@ export default function ResumeManager() {
                 />
               </div>
               <div>
+                <label className="block text-slate-400 text-sm mb-2">آدرس وبسایت پروژه (اختیاری)</label>
+                <input
+                  type="text"
+                  value={newPortfolio.url || ''}
+                  onChange={(e) => setNewPortfolio({ ...newPortfolio, url: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-sm focus:border-purple-500 focus:outline-none"
+                  placeholder="https://example.com"
+                  dir="ltr"
+                />
+              </div>
+              <div>
                 <label className="block text-slate-400 text-sm mb-2">رنگ</label>
                 <select
                   value={newPortfolio.color}
@@ -317,7 +329,14 @@ export default function ResumeManager() {
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => { setShowPortfolioModal(false); setEditingPortfolio(null); setNewPortfolio({ id: '', title: '', description: '', tags: [], color: 'from-purple-500 to-pink-600' }); }} className="flex-1 px-4 py-3 rounded-xl bg-slate-800 text-slate-400 text-sm font-medium hover:bg-slate-700 transition-colors">
+              <button
+                onClick={() => {
+                  setShowPortfolioModal(false)
+                  setEditingPortfolio(null)
+                  setNewPortfolio({ id: '', title: '', description: '', tags: [], color: 'from-purple-500 to-pink-600', url: '' })
+                }}
+                className="flex-1 px-4 py-3 rounded-xl bg-slate-800 text-slate-400 text-sm font-medium hover:bg-slate-700 transition-colors"
+              >
                 انصراف
               </button>
               <button onClick={handleAddPortfolio} className="flex-1 px-4 py-3 rounded-xl bg-purple-500 text-white text-sm font-medium hover:bg-purple-600 transition-colors">

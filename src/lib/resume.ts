@@ -54,6 +54,7 @@ export interface PortfolioItem {
   description: string
   tags: string[]
   color: string
+  url?: string
 }
 
 const DEFAULT_RESUME: ResumeData = {
@@ -105,6 +106,14 @@ const DEFAULT_RESUME: ResumeData = {
       description: 'طراحی و توسعه وبسایت کامل با Next.js و TailwindCSS',
       tags: ['Next.js', 'TailwindCSS'],
       color: 'from-green-500 to-emerald-600',
+    },
+    {
+      id: '2',
+      title: 'وبسایت شخصی علی محمودآبادی',
+      description: 'طراحی و توسعه وبسایت شخصی و رزومه آنلاین با تمرکز بر تجربه کاربری و معرفی مهارت‌ها',
+      tags: ['Next.js', 'Portfolio', 'UI/UX'],
+      color: 'from-purple-500 to-pink-600',
+      url: 'https://personalwebsite-beta-green.vercel.app/',
     },
   ],
   

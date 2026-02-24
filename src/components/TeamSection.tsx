@@ -155,9 +155,6 @@ export default function TeamSection() {
           <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
             {t.team.title} <span className="gradient-text">{t.team.titleHighlight}</span>
           </h2>
-          <p className="text-gray-400 leading-relaxed text-sm sm:text-base px-2">
-            {t.team.description}
-          </p>
         </div>
 
         {/* Team Grid */}

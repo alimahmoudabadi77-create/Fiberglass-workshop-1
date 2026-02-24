@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getSettings, saveSettings, SiteSettings } from '@/lib/settings'
+import { getSettingsAsync, saveSettingsAsync, SiteSettings } from '@/lib/settings'
 import Link from 'next/link'
 import DesignerWelcomeBanner from '@/components/admin/DesignerWelcomeBanner'
 import Dashboard from '@/components/admin/Dashboard'
@@ -26,15 +26,17 @@ export default function DesignerAdminPage() {
     setCheckingAuth(false)
 
     if (authenticated) {
-      const currentSettings = getSettings()
-      setSettings(currentSettings)
-      setLockMessage(currentSettings.lockMessage)
+      const loadSettings = async () => {
+        const s = await getSettingsAsync()
+        setSettings(s)
+        setLockMessage(s.lockMessage)
+      }
+      loadSettings()
 
-      // Listen for changes
-      const handleUpdate = () => {
-        const newSettings = getSettings()
-        setSettings(newSettings)
-        setLockMessage(newSettings.lockMessage)
+      const handleUpdate = async () => {
+        const s = await getSettingsAsync()
+        setSettings(s)
+        setLockMessage(s.lockMessage)
       }
 
       // تمدید session هنگام فعالیت کاربر
@@ -71,7 +73,7 @@ export default function DesignerAdminPage() {
     setIsAuthenticated(false)
   }
 
-  const handleToggleLock = () => {
+  const handleToggleLock = async () => {
     if (!settings) return
     
     const newSettings: SiteSettings = {
@@ -79,14 +81,13 @@ export default function DesignerAdminPage() {
       isLocked: !settings.isLocked,
       lastUpdated: new Date().toISOString(),
     }
-    saveSettings(newSettings)
     setSettings(newSettings)
-    
+    await saveSettingsAsync(newSettings)
     window.dispatchEvent(new Event('storage'))
     showSuccessMessage()
   }
 
-  const handleSaveMessage = () => {
+  const handleSaveMessage = async () => {
     if (!settings) return
     
     const newSettings: SiteSettings = {
@@ -94,8 +95,8 @@ export default function DesignerAdminPage() {
       lockMessage: lockMessage,
       lastUpdated: new Date().toISOString(),
     }
-    saveSettings(newSettings)
     setSettings(newSettings)
+    await saveSettingsAsync(newSettings)
     showSuccessMessage()
   }
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getSettings, SiteSettings } from '@/lib/settings'
+import { getSettingsAsync, SiteSettings } from '@/lib/settings'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import HeroSection from '@/components/HeroSection'
@@ -23,32 +23,32 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial settings
-    const currentSettings = getSettings()
-    setSettings(currentSettings)
-    setIsLoading(false)
+    const loadSettings = async () => {
+      const s = await getSettingsAsync()
+      setSettings(s)
+    }
+    loadSettings().finally(() => setIsLoading(false))
+  }, [])
 
-    // Listen for storage changes
+  useEffect(() => {
+    const loadSettings = async () => {
+      const s = await getSettingsAsync()
+      setSettings(s)
+    }
+    loadSettings()
+
     const handleStorageChange = () => {
-      const newSettings = getSettings()
-      setSettings(newSettings)
+      loadSettings()
     }
 
     window.addEventListener('storage', handleStorageChange)
 
+    const interval = setInterval(loadSettings, 3000)
+
     return () => {
       window.removeEventListener('storage', handleStorageChange)
+      clearInterval(interval)
     }
-  }, [])
-
-  // Update settings check
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newSettings = getSettings()
-      setSettings(newSettings)
-    }, 500)
-
-    return () => clearInterval(interval)
   }, [])
 
   // Loading state

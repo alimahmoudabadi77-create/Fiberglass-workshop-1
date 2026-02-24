@@ -11,7 +11,28 @@
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-### ۲. ایجاد جدول گالری
+### ۲. ایجاد جدول تنظیمات وبسایت (فعال/غیرفعال)
+در **SQL Editor** این کوئری را اجرا کنید:
+
+```sql
+CREATE TABLE site_settings (
+  id TEXT PRIMARY KEY DEFAULT 'main',
+  is_locked BOOLEAN NOT NULL DEFAULT false,
+  lock_message TEXT NOT NULL DEFAULT 'در حال بروزرسانی وبسایت هستیم. از صبر و شکیبایی شما سپاسگزاریم.',
+  last_updated TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read" ON site_settings FOR SELECT USING (true);
+CREATE POLICY "Allow public write" ON site_settings FOR ALL USING (true);
+
+INSERT INTO site_settings (id, is_locked, lock_message, last_updated) 
+VALUES ('main', false, 'در حال بروزرسانی وبسایت هستیم. از صبر و شکیبایی شما سپاسگزاریم.', NOW())
+ON CONFLICT (id) DO NOTHING;
+```
+
+### ۳. ایجاد جدول گالری
 در Supabase به **SQL Editor** بروید و این کوئری را اجرا کنید:
 
 ```sql
@@ -37,7 +58,7 @@ CREATE POLICY "Allow all update" ON gallery FOR UPDATE USING (true);
 CREATE POLICY "Allow all delete" ON gallery FOR DELETE USING (true);
 ```
 
-### ۳. ایجاد Storage Bucket
+### ۴. ایجاد Storage Bucket
 1. به **Storage** در داشبورد Supabase بروید
 2. روی **New bucket** کلیک کنید
 3. نام bucket را `gallery` قرار دهید
@@ -58,7 +79,7 @@ CREATE POLICY "Allow public read" ON storage.objects
   FOR SELECT USING (bucket_id = 'gallery');
 ```
 
-### ۴. تنظیم متغیرهای محیطی
+### ۵. تنظیم متغیرهای محیطی
 یک فایل `.env.local` در ریشه پروژه بسازید و مقادیر زیر را قرار دهید:
 
 ```
@@ -66,7 +87,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-### ۵. استقرار با GitHub Pages
+### ۶. استقرار با GitHub Pages
 اگر از GitHub Actions برای deploy استفاده می‌کنید، در تنظیمات مخزن (Settings > Secrets and variables > Actions) این دو Secret را اضافه کنید:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -82,4 +103,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-> **توجه:** اگر Supabase را راه‌اندازی نکنید، گالری همچنان با localStorage کار می‌کند؛ اما فقط روی همان مرورگری که آپلود شده قابل مشاهده خواهد بود.
+> **توجه:** اگر Supabase را راه‌اندازی نکنید، گالری و تنظیمات فعال/غیرفعال با localStorage کار می‌کنند؛ در نتیجه فقط روی همان مرورگری که تغییرات انجام شده قابل مشاهده خواهند بود. برای اعمال تنظیمات روی همه دستگاه‌ها، حتماً Supabase را راه‌اندازی کنید.

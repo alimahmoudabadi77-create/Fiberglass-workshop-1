@@ -76,28 +76,22 @@ const DEFAULT_RESUME: ResumeData = {
   ],
   
   programmingLanguages: [
-    { name: 'JavaScript', color: 'from-yellow-400 to-yellow-600' },
-    { name: 'TypeScript', color: 'from-blue-400 to-blue-600' },
-    { name: 'Python', color: 'from-green-400 to-blue-500' },
-    { name: 'PHP', color: 'from-indigo-400 to-purple-600' },
+    { name: 'C#', color: 'from-green-500 to-emerald-600' },
+    { name: 'CSS', color: 'from-blue-500 to-cyan-500' },
     { name: 'HTML5', color: 'from-orange-400 to-red-500' },
-    { name: 'CSS3', color: 'from-blue-400 to-cyan-500' },
-    { name: 'SQL', color: 'from-cyan-400 to-blue-600' },
-    { name: 'C#', color: 'from-purple-400 to-violet-600' },
+    { name: 'Python', color: 'from-blue-500 to-indigo-500' },
+    { name: 'JavaScript', color: 'from-yellow-400 to-yellow-600' },
+    { name: 'TypeScript', color: 'from-sky-400 to-blue-600' },
   ],
   
   frameworks: [
+    { name: 'Django', color: 'from-green-600 to-green-800' },
+    { name: 'Node.js', color: 'from-green-500 to-green-700' },
     { name: 'React', color: 'from-cyan-400 to-blue-500' },
     { name: 'Next.js', color: 'from-gray-400 to-gray-600' },
-    { name: 'Vue.js', color: 'from-green-400 to-emerald-600' },
-    { name: 'Node.js', color: 'from-green-500 to-green-700' },
-    { name: 'Laravel', color: 'from-red-400 to-red-600' },
-    { name: 'Django', color: 'from-green-600 to-green-800' },
-    { name: 'TailwindCSS', color: 'from-cyan-400 to-cyan-600' },
-    { name: 'Bootstrap', color: 'from-purple-500 to-purple-700' },
   ],
   
-  tools: ['Git', 'GitHub', 'VS Code', 'Figma', 'Photoshop', 'Linux', 'Docker', 'MongoDB', 'MySQL', 'PostgreSQL'],
+  tools: ['Cursor', 'GitHub', 'VS Code'],
   
   portfolio: [
     {

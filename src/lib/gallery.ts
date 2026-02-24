@@ -166,12 +166,37 @@ function saveGalleryItemsToStorage(items: GalleryItem[]): void {
   }
 }
 
+// ========== Static Gallery (JSON + public/gallery images) ==========
+
+const STATIC_GALLERY_URL = '/gallery/data.json'
+
+async function fetchGalleryFromStatic(): Promise<GalleryItem[]> {
+  try {
+    const res = await fetch(STATIC_GALLERY_URL, { cache: 'no-store' })
+    if (!res.ok) return []
+    const data = await res.json()
+    if (!Array.isArray(data)) return []
+    return data.map((row: { id: string; type: string; url: string; title: string; description: string; createdAt?: string; created_at?: string }) => ({
+      id: row.id,
+      type: (row.type || 'image') as 'image' | 'video',
+      url: row.url,
+      title: row.title || '',
+      description: row.description || '',
+      createdAt: row.createdAt || row.created_at || new Date().toISOString(),
+    }))
+  } catch {
+    return []
+  }
+}
+
 // ========== API عمومی (Async) ==========
 
 export async function getGalleryItemsAsync(): Promise<GalleryItem[]> {
   if (isSupabaseConfigured()) {
     return fetchGalleryFromSupabase()
   }
+  const staticItems = await fetchGalleryFromStatic()
+  if (staticItems.length > 0) return staticItems
   return getGalleryItemsFromStorage()
 }
 

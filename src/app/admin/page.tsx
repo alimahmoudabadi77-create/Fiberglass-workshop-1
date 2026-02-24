@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { getSettings, SiteSettings } from '@/lib/settings'
 import Link from 'next/link'
-import GalleryManager from '@/components/admin/GalleryManager'
 import TeamManager from '@/components/admin/TeamManager'
 import WelcomeBanner from '@/components/admin/WelcomeBanner'
 import ContactManager from '@/components/admin/ContactManager'
@@ -17,7 +16,7 @@ import { useAdminLanguage } from '@/lib/AdminLanguageContext'
 export default function AdminPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [showSaveSuccess, setShowSaveSuccess] = useState(false)
-  const [activeSection, setActiveSection] = useState<'home' | 'gallery' | 'team' | 'contact' | 'dashboard' | 'about' | 'manager'>('home')
+  const [activeSection, setActiveSection] = useState<'home' | 'team' | 'contact' | 'dashboard' | 'about' | 'manager'>('home')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -199,20 +198,6 @@ export default function AdminPage() {
               </button>
 
               <button
-                onClick={() => handleSectionChange('gallery')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  activeSection === 'gallery'
-                    ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-                }`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {t.admin.sidebar.gallery}
-              </button>
-
-              <button
                 onClick={() => handleSectionChange('team')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                   activeSection === 'team'
@@ -350,20 +335,6 @@ export default function AdminPage() {
             </button>
 
             <button
-              onClick={() => setActiveSection('gallery')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                activeSection === 'gallery'
-                  ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {t.admin.sidebar.gallery}
-            </button>
-
-            <button
               onClick={() => setActiveSection('team')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                 activeSection === 'team'
@@ -437,8 +408,6 @@ export default function AdminPage() {
             <AboutManager />
           ) : activeSection === 'manager' ? (
             <ManagerManager />
-          ) : activeSection === 'gallery' ? (
-            <GalleryManager />
           ) : activeSection === 'team' ? (
             <TeamManager />
           ) : activeSection === 'contact' ? (
